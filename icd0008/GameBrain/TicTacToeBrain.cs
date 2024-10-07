@@ -4,16 +4,13 @@ public class TicTacToeBrain
 {
     private EGamePiece[,] _gameBoard;
     private EGamePiece _nextMoveBy { get; set; } = EGamePiece.X;
+    
+    private GameConfiguration _gameConfiguration;
 
-    public TicTacToeBrain() : this(3)
+    public TicTacToeBrain( GameConfiguration gameConfiguration)
     {
-    }
-    public TicTacToeBrain(int boardSize) : this(boardSize, boardSize)
-    {
-    }
-    private TicTacToeBrain(int boardX, int boardY)
-    {
-        _gameBoard = new EGamePiece[boardX, boardY];
+        _gameConfiguration = gameConfiguration;
+        _gameBoard = new EGamePiece[_gameConfiguration.BoardSizeWidth, _gameConfiguration.BoardSizeHeight];
     }
 
     public EGamePiece[,] GameBoard

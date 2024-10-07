@@ -25,6 +25,12 @@ public class Menu
     };
     private EMenuLevel _menuLevel { get; set; }
 
+    public void SetMenuItemAction(string shortcut, Func<string> action)
+    {
+        var menuItem = MenuItems.Single(m => m.Shortcut == shortcut);
+        menuItem.MenuItemAction = action;
+    }
+
     public Menu(EMenuLevel menuLevel, string header, List<MenuItem> menuItems)
     {
         if (string.IsNullOrWhiteSpace(header))
@@ -83,8 +89,11 @@ public class Menu
             {
                 return _menuItemReturnMain.Shortcut;
             }
-            
-            // return menuItem.Shortcut;
+
+            if (!string.IsNullOrWhiteSpace(menuReturnValue))
+            {
+                return menuReturnValue;
+            }
             
         } while (true);
     }

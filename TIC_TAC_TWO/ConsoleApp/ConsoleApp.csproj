@@ -7,4 +7,11 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ConsoleUI\ConsoleUI.csproj" />
+      <ProjectReference Include="..\DAL\DAL.csproj" />
+      <ProjectReference Include="..\GameBrain\GameBrain.csproj" />
+      <ProjectReference Include="..\MenySystem\MenySystem.csproj" />
+    </ItemGroup>
+
 </Project>
