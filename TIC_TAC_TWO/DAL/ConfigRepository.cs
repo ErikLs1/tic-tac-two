@@ -8,11 +8,7 @@ public class ConfigRepository
     {
         new GameConfiguration()
         {
-            Name = "Classical",
-            BoardSizeWidth = 5,
-            BoardSizeHeight = 5,
-            WinCondition = 3,
-            MovePieceAfterNMoves = 2
+            Name = "Classical"
         },
         new GameConfiguration()
         {
@@ -22,6 +18,15 @@ public class ConfigRepository
             WinCondition = 4,
             MovePieceAfterNMoves = 3,
         },
+        
+        // new GameConfiguration()
+        // {
+        //     Name = "CustomConfiguration",
+        //     BoardSizeWidth = n,
+        //     BoardSizeHeight = n,
+        //     WinCondition = n,
+        //     MovePieceAfterNMoves = n
+        // }
     };
 
     public List<string> GetConfigurationNames()
@@ -36,5 +41,4 @@ public class ConfigRepository
     {
         return _gameConfigurations.Single(c => c.Name == name);
     }
-
 }
