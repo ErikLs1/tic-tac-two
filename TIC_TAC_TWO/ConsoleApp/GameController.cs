@@ -10,18 +10,35 @@ public static class GameController
 
     public static string MainLoop()
     {
+        Console.Write("Enter Player X's name: ");
+        var playerX = Console.ReadLine() ?? "Player X";
+        
+        Console.Write("Enter Player O's name: ");
+        var playerO = Console.ReadLine() ?? "Player O";
+
+        EGamePiece startingPlayer = GetStartingPlayer();
+        
         var chosenConfigShortcut = ChooseConfiguration();
 
-        if (!int.TryParse(chosenConfigShortcut, out var configNo))
+        // if (!int.TryParse(chosenConfigShortcut, out var configNo))
+        // {
+        //     return chosenConfigShortcut;
+        // }
+
+        GameConfiguration chosenConfig;
+        
+        if (chosenConfigShortcut == "custom")
         {
-            return chosenConfigShortcut;
+            chosenConfig = ConfigRepository.ConfigureCustomGame();
         }
+        else
+        {
+            chosenConfig = ConfigRepository.GetConfigurationByName(
+                ConfigRepository.GetConfigurationNames()[int.Parse(chosenConfigShortcut)]);
+        }
+        
 
-        var chosenConfig = ConfigRepository.GetConfigurationByName(
-            ConfigRepository.GetConfigurationNames()[configNo]
-        );
-
-        var gameInstance = new TicTacTwoBrain(chosenConfig);
+        var gameInstance = new TicTacTwoBrain(chosenConfig, playerX, playerO, startingPlayer);
         var moves = 0;
         
         do
@@ -35,7 +52,6 @@ public static class GameController
             
             if (moves >= 4)
             {
-                
                 Console.WriteLine("Choose what you want to do:");
                 Console.WriteLine("A) Make a move");
                 Console.WriteLine("B) Move the grid");
@@ -64,18 +80,15 @@ public static class GameController
                             var winner = gameInstance.CheckForWin(inputX, inputY);
                             if (winner != null)
                             {
-                                Console.WriteLine($"{winner} has won the game!");
+                                Console.Clear();
+                                Console.WriteLine("TIC-TAC-TWO");
+                                Console.WriteLine(new string('=', gameInstance.DimX * 4));
+                                Console.WriteLine();
+                                Console.WriteLine($"{winner} has won the game!\ud83e\udd73\ud83e\udd73");
                                 ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
                                 return "game over!";
                             }
                         }
-                        // if (gameInstance.CheckForWin(inputX, inputY) != null)
-                        // {
-                        //     Console.Clear();
-                        //     ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
-                        //     Console.WriteLine($"{gameInstance.CheckForWin(inputX, inputY)} has won the game!");
-                        //     return "You did it";
-                        // }
                         moves++;
                         Console.Clear();
                         break;
@@ -106,7 +119,7 @@ public static class GameController
             
         } while (true);
 
-        return "Good Job PlayerName";
+        // return "Good Job PlayerName";
     }
 
     private static string ChooseConfiguration()
@@ -124,6 +137,13 @@ public static class GameController
             });
         }
 
+        configMenuItems.Add(new MenuItem()
+        {
+            Title = "Custom Configuration",
+            Shortcut = (configMenuItems.Count + 1).ToString(),
+            MenuItemAction = () => "custom"
+        });
+        
         var configMenu = new Menu(EMenuLevel.Secondary,
             "TIC-TAC-TOE - choose game config",
             configMenuItems,
@@ -160,6 +180,7 @@ public static class GameController
 
     private static (int, int) InsertCoordinates(TicTacTwoBrain gameInstance)
     {
+        Console.WriteLine($"{gameInstance.GetCurrentPlayer()}'s ");
         Console.Write("Give me coordinates <x,y> or save:");
     
        
@@ -188,7 +209,19 @@ public static class GameController
             return(inputX, inputY);
         }
     }
-    
+
+    private static EGamePiece GetStartingPlayer() 
+    {
+        while (true)
+        {
+            Console.Write("Who will start (X/0): ");
+            var startChoice = Console.ReadLine()?.Trim().ToUpper();
+            if (startChoice == "X") return EGamePiece.X;
+            if (startChoice == "O") return EGamePiece.O;
+
+            Console.WriteLine("Invalid choice! Please enter 'X' or 'O'.");
+        }
+    }
     private static void MovePiece(TicTacTwoBrain gameInstance, EGamePiece gamePiece)
     {
         while (true)

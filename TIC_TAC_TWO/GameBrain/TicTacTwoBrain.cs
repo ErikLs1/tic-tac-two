@@ -6,14 +6,22 @@ public class TicTacTwoBrain
     public EGamePiece _nextMoveBy { get; set; } = EGamePiece.X;
 
     private GameConfiguration _gameConfiguration;
+
+    private string _playerX;
+    private string _playerO;
+    
     private (int x, int y) _gridPostion;
 
 
-    public TicTacTwoBrain(GameConfiguration gameConfiguration)
+    public TicTacTwoBrain(GameConfiguration gameConfiguration, string playerX, string playerO, EGamePiece startingPlayer)
     {
         _gameConfiguration = gameConfiguration;
         _gameBoard = new EGamePiece[_gameConfiguration.BoardSizeWidth, _gameConfiguration.BoardSizeHeight];
-
+        
+        _playerX = playerX;
+        _playerO = playerO;
+        _nextMoveBy = startingPlayer;
+        
         for (int x = 0; x < _gameConfiguration.BoardSizeWidth; x++)
         {
             for (int y = 0; y < _gameConfiguration.BoardSizeHeight; y++)
@@ -38,7 +46,11 @@ public class TicTacTwoBrain
         Console.WriteLine("Cannot move grid in this direction. Choose the other move");
         return false;
     }
-    
+
+    public string GetCurrentPlayer()
+    {
+        return _nextMoveBy == EGamePiece.X ? _playerX : _playerO;
+    }
     private (int x, int y) GetGridCenter()
     {
         int startX = (DimX - GridWidth) / 2;
