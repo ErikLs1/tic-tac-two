@@ -3,8 +3,9 @@
 public class Menu
 {
     private string MenuHeader { get; set; }
-    private static string _menuDivider = "=================";
+    private static string _menuDivider = "\x1b[1m\x1b[36m=================\x1b[0m\x1b[0m";
     private List<MenuItem> MenuItems { get; set; }
+    private string? MenuContent { get; set; }
 
     private MenuItem _menuItemExit = new MenuItem()
     {
@@ -33,15 +34,15 @@ public class Menu
         menuItem.MenuItemAction = action;
     }
     
-    public Menu(EMenuLevel menuLevel, string menuHeader, List<MenuItem> menuItems, bool isCustomMenu = false)
+    public Menu(EMenuLevel menuLevel, string menuHeader, List<MenuItem> menuItems, string? menuContent = null, bool isCustomMenu = false)
     {
         if (string.IsNullOrWhiteSpace(menuHeader))
         {
             throw new ApplicationException("Menu header cannot be empty.");
         }
-
+        
         MenuHeader = menuHeader;
-
+        
         if (menuItems == null || menuItems.Count == 0)
         {
             throw new ApplicationException("Menu items cannot be empty.");
@@ -50,6 +51,7 @@ public class Menu
         MenuItems = menuItems;
         _isCustomMenu = isCustomMenu;
         _menuLevel = menuLevel;
+        MenuContent = menuContent;
         
         
         if (_menuLevel != EMenuLevel.Main)
@@ -137,7 +139,13 @@ public class Menu
     {
         Console.WriteLine(MenuHeader);
         Console.WriteLine(_menuDivider);
-
+        
+        if (!string.IsNullOrWhiteSpace(MenuContent))
+        {
+            Console.WriteLine(MenuContent);
+            Console.WriteLine(_menuDivider);
+        }
+        
         foreach (var item in MenuItems)
         {
             Console.WriteLine(item);

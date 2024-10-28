@@ -37,6 +37,6 @@ public class MenuItem
 
     public override string ToString()
     {
-        return Shortcut + ") " +Title;
+        return "\x1b[1m\x1b[35m" +Shortcut + ")\x1b[0m\x1b[0m " + "\x1b[1m" + Title + "\x1b[0m";
     }
 }

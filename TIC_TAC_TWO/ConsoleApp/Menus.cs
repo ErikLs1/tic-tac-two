@@ -4,27 +4,27 @@ namespace ConsoleApp;
 
 public static class Menus
 {
-    public static readonly Menu OptionsMenu =
-        new Menu(
-            EMenuLevel.Secondary,
-            "TIC-TAC-TOE Information", [
-                new MenuItem()
-                {
-                    Shortcut = "X",
-                    Title = "X Starts",
-                    MenuItemAction = DummyMethod
-                },
-                new MenuItem()
-                {
-                    Shortcut = "O",
-                    Title = "O Starts",
-                    MenuItemAction = DummyMethod
-                },
-            ]);
+    // public static readonly Menu OptionsMenu =
+    //     new Menu(
+    //         EMenuLevel.Secondary,
+    //         "TIC-TAC-TOE Information", [
+    //             new MenuItem()
+    //             {
+    //                 Shortcut = "X",
+    //                 Title = "X Starts",
+    //                 MenuItemAction = DummyMethod
+    //             },
+    //             new MenuItem()
+    //             {
+    //                 Shortcut = "O",
+    //                 Title = "O Starts",
+    //                 MenuItemAction = DummyMethod
+    //             },
+    //         ]);
 
     public static Menu MainMenu = new Menu(
         EMenuLevel.Main,
-        "TIC-TAC-TOE", [
+        "\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m \ud83d\ude00\ud83d\ude00", [
             new MenuItem()
             {
                 Shortcut = "N",
@@ -48,7 +48,7 @@ public static class Menus
             
             new MenuItem()
             {
-                Shortcut = "R",
+                Shortcut = "S",
                 Title = "About the game rules",
                 MenuItemAction = AboutTheGameRulesPage
             }
@@ -63,60 +63,117 @@ public static class Menus
 
     public static string AboutUsPage()
     {
-        Console.WriteLine("\x1b[1mDeveloper of the game:\x1b[0m Erik Lihhats");
-        Console.WriteLine("\x1b[1mPlace of study:\x1b[0m Tallinn University of Technology");
-        Console.WriteLine("\x1b[1mBackground:\x1b[0m Professional Swimmer (12+ years)🏊‍♂️");
-        Console.WriteLine("\x1b[1mHobbies:\x1b[0m ");
-        Console.WriteLine("     * Gym 🏋️💪");
-        Console.WriteLine("     * Muay Thai 🥊");
-        Console.WriteLine("     * Chess ♟️");
-        Console.WriteLine("\x1b[1mLanguages:\x1b[0m ");
-        Console.WriteLine("     * English (fluent) 🇬🇧");
-        Console.WriteLine("     * Estonia (fluent) 🇪🇪");
-        Console.WriteLine("     * Russian (fluent) 🇷🇺");
+        var aboutUsContent = 
+        "\x1b[1m\x1b[32mDeveloper of the game\x1b[0m\x1b[0m: Erik Lihhats\n" +
+            "\x1b[1m\x1b[32mPlace of study\x1b[0m\x1b[0m: Tallinn University of Technology\n" +
+            "\x1b[1m\x1b[32mBackground\x1b[0m\x1b[0m: Professional Swimmer (12+ years)🏊‍♂️\n" +
+            "\x1b[1m\x1b[32mHobbies\x1b[0m\x1b[0m: \n" +
+            "     * Gym 🏋️💪\n" +
+            "     * Muay Thai 🥊\n" +
+            "     * Chess ♟️\n" +
+            "\x1b[1m\x1b[32mLanguages\x1b[0m\x1b[0m:\n" +
+            "     * English (fluent) 🇬🇧\n" +
+            "     * Estonian (fluent) 🇪🇪\n" +
+            "     * Russian (fluent) 🇷🇺\n";
         
-        return "";
+        var aboutUsMenu = new Menu(
+            EMenuLevel.Secondary,  
+            "\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m",
+            new List<MenuItem>
+            {
+                new MenuItem()
+                {
+                    Shortcut = "R",
+                    Title = "Return",
+                    MenuItemAction = () => MainMenu.Run()
+                },
+                new MenuItem()
+                {
+                    Shortcut = "E",
+                    Title = "Exit",
+                    MenuItemAction = () => "E"
+                }
+            },
+            aboutUsContent 
+        );
+
+        return aboutUsMenu.Run();
     }
     
     public static string AboutTheGamePage()
     {
-        Console.WriteLine("Tic-Tac-Two is a variation of tic-tac-toe ");
-        Console.WriteLine("published by Chicago-based game seller Marbles: The Brain Store.");
-        Console.WriteLine("The objective of creating a three-in-a-row is the same,");
-        Console.WriteLine("but players are also allowed to move the tic-tac-toe grid and the markers.");
-        return "";
+        var aboutTheGameContent = "\nTic-Tac-Two is a variation of tic-tac-toe\n" +
+                                  "published by Chicago-based game seller Marbles: The Brain Store.\n" +
+                                  "The objective of creating a three-in-a-row is the same,\n" +
+                                  "but players are also allowed to move the tic-tac-toe grid and the markers.\n";
+        
+        var aboutTheGameMenu = new Menu(
+            EMenuLevel.Secondary,  
+            "\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m",
+            new List<MenuItem>
+            {
+                new MenuItem()
+                {
+                    Shortcut = "R",
+                    Title = "Return",
+                    MenuItemAction = () => MainMenu.Run()
+                },
+                new MenuItem()
+                {
+                    Shortcut = "E",
+                    Title = "Exit",
+                    MenuItemAction = () => "E"
+                }
+            },
+            aboutTheGameContent 
+        );
+
+
+        return aboutTheGameMenu.Run();
     }
 
     
     public static string AboutTheGameRulesPage()
     {
-        Console.WriteLine("\x1b[1mClassical Game Rules\x1b[0m");
-        Console.WriteLine("\x1b[1m====================\x1b[0m");
+        var aboutTheGameRulesContent = "\nAt the start of the game, each player takes turns placing one of their pieces\n" +
+                                       "on any empty cell contained within the tic-tac-toe grid.\n\n" +
+                                       "Once each player has placed at least two of their pieces, they may do one of three things on their turn: \n" +
+                                       "     1. place one of their remaining pieces on an empty cell within the tic-tac-toe grid,\n" +
+                                       "     2. move the tic-tac-toe grid such that it is centered at a cell one space horizontally,\n" +
+                                       "        vertically, or diagonally away from the cell it was originally centered at,\n" +
+                                       "     3. move one of their pieces that is already on the board (regardless of whether it is\n" +
+                                       "        within the tic-tac-toe grid) to any empty cell within the grid.\n\n" +
+                                       "The first player to create a horizontal, vertical, or diagonal line of their\n" +
+                                       "own pieces contained within the tic-tac-toe grid wins.\n" +
+                                       "If in a single move the grid has been moved such that it contains \n" +
+                                       "both a three-in-a-row of X pieces and a three-in-a-row of O pieces, then the game is a tie.\n\n" +
+                                       "\x1b[1mBUT\x1b[0m ‼\ufe0f‼\ufe0f‼\ufe0f‼\ufe0f \n\n" +
+                                       "In our incredible game you can also choose what ever configuration that you like.\n" +
+                                       "You can literally configure any rule. This way you can get more fun with your friends\n";
         
-        Console.WriteLine("At the start of the game, each player takes turns placing one of their pieces");
-        Console.WriteLine("on any empty cell contained within the tic-tac-toe grid.");
-        Console.WriteLine();
-        
-        Console.WriteLine("Once each player has placed at least two of their pieces, they may do one of three things on their turn: ");
-        Console.WriteLine("     1. place one of their remaining pieces on an empty cell within the tic-tac-toe grid,");
-        Console.WriteLine("     2. move the tic-tac-toe grid such that it is centered at a cell one space horizontally,");
-        Console.WriteLine("        vertically, or diagonally away from the cell it was originally centered at,");
-        Console.WriteLine("     3. move one of their pieces that is already on the board (regardless of whether it is");
-        Console.WriteLine("        within the tic-tac-toe grid) to any empty cell within the grid.");
-        Console.WriteLine();
-        
-        Console.WriteLine("The first player to create a horizontal, vertical, or diagonal line of their");
-        Console.WriteLine("own pieces contained within the tic-tac-toe grid wins.");
-        Console.WriteLine("If in a single move the grid has been moved such that it contains ");
-        Console.WriteLine("both a three-in-a-row of X pieces and a three-in-a-row of O pieces, then the game is a tie.");
-        Console.WriteLine();
-        
-        Console.WriteLine("\x1b[1mBUT ‼️‼️\x1b[0m");
-        Console.WriteLine("\x1b[1m====================\x1b[0m");
-        
-        Console.WriteLine("In our incredible game you can also choose what ever configuration that you like.");
-        Console.WriteLine("You can literally configure any rule. This way you can get more fun with your friends");
-        return "";
+        var aboutTheGameRulesMenu = new Menu(
+            EMenuLevel.Secondary,  
+            "\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m",
+            new List<MenuItem>
+            {
+                new MenuItem()
+                {
+                    Shortcut = "R",
+                    Title = "Return",
+                    MenuItemAction = () => MainMenu.Run()
+                },
+                new MenuItem()
+                {
+                    Shortcut = "E",
+                    Title = "Exit",
+                    MenuItemAction = () => "E"
+                }
+            },
+            aboutTheGameRulesContent 
+        );
+
+
+        return aboutTheGameRulesMenu.Run();
     }
 
 }

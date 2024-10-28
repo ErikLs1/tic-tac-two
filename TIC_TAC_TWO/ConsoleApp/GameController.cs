@@ -44,8 +44,8 @@ public static class GameController
         do
         {
             Console.Clear();
-            Console.WriteLine("TIC-TAC-TWO");
-            Console.WriteLine(new string('=', gameInstance.DimX * 4));
+            Console.WriteLine("\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m (🥷 🆚 🤺)");
+            Console.WriteLine("\x1b[1m\x1b[36m" + new string('=', gameInstance.DimX * 4) + "\x1b[0m\x1b[0m");
             Console.WriteLine();
             ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
             Console.WriteLine();
@@ -53,9 +53,10 @@ public static class GameController
             if (moves >= 4)
             {
                 Console.WriteLine("Choose what you want to do:");
-                Console.WriteLine("A) Make a move");
-                Console.WriteLine("B) Move the grid");
-                Console.WriteLine("C) Move the piece");
+                Console.WriteLine("\x1b[1m\x1b[35mA)\x1b[0m\x1b[0m Make a move");
+                Console.WriteLine("\x1b[1m\x1b[35mB)\x1b[0m\x1b[0m Move the grid");
+                Console.WriteLine("\x1b[1m\x1b[35mC)\x1b[0m\x1b[0m Move the piece");
+           
                 string choice;
                 do
                 {
@@ -81,10 +82,10 @@ public static class GameController
                             if (winner != null)
                             {
                                 Console.Clear();
-                                Console.WriteLine("TIC-TAC-TWO");
-                                Console.WriteLine(new string('=', gameInstance.DimX * 4));
+                                Console.WriteLine("\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m");
+                                Console.WriteLine("\x1b[1m\x1b[36m" + new string('=', gameInstance.DimX * 4) + "\x1b[0m\x1b[0m");
                                 Console.WriteLine();
-                                Console.WriteLine($"{winner} has won the game!\ud83e\udd73\ud83e\udd73");
+                                Console.WriteLine($"{winner} has won the game! \ud83e\udd73\ud83e\udd73\ud83e\udd73\ud83e\udd73 ");
                                 ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
                                 return "game over!";
                             }
@@ -145,7 +146,7 @@ public static class GameController
         });
         
         var configMenu = new Menu(EMenuLevel.Secondary,
-            "TIC-TAC-TOE - choose game config",
+            "\x1b[1m\x1b[35mTIC-TAC-TWO - choose configuration\x1b[0m\x1b[0m",
             configMenuItems,
             isCustomMenu: true
         );
@@ -181,7 +182,7 @@ public static class GameController
     private static (int, int) InsertCoordinates(TicTacTwoBrain gameInstance)
     {
         Console.WriteLine($"{gameInstance.GetCurrentPlayer()}'s ");
-        Console.Write("Give me coordinates <x,y> or save:");
+        Console.Write("Give me coordinates <\x1b[1m\x1b[31mX\x1b[0m\x1b[0m,\x1b[1m\x1b[32mY\x1b[0m\x1b[0m> or save:");
     
        
         while (true)
