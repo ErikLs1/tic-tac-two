@@ -39,10 +39,14 @@ public class ConfigRepository
     {
         var config = new GameConfiguration();
         
+        Console.Clear();
+        Console.WriteLine("\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m");
+        Console.WriteLine("\x1b[1m\x1b[36m====================\x1b[0m\x1b[0m");
+        
         config.BoardSizeWidth = CheckForValidInput("Enter the board width (minimum 3, maximum 25): ",3, 25);
         config.BoardSizeHeight = CheckForValidInput("Enter the board height (minimum 3, maximum 25): ",3, 25);
-        config.GridWidth = CheckForValidInput($"Enter the grid width (minimum 3, {config.BoardSizeWidth}): ",3, config.BoardSizeWidth);
-        config.GridHeight = CheckForValidInput($"Enter the grid height (minimum 3, {config.BoardSizeHeight}): ",3, config.BoardSizeHeight);
+        config.GridWidth = CheckForValidInput($"Enter the grid width (minimum 3, max {config.BoardSizeWidth}): ",3, config.BoardSizeWidth);
+        config.GridHeight = CheckForValidInput($"Enter the grid height (minimum 3, max {config.BoardSizeHeight}): ",3, config.BoardSizeHeight);
         config.WinCondition = CheckForValidInput($"Enter the winning condition (minimum 3): ",3);
         config.MovePieceAfterNMoves = CheckForValidInput($"Enter after how many moves you can choose to move your piece (minimum 2): ",2);
         

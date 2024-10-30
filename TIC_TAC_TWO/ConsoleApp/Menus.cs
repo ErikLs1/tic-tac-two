@@ -4,24 +4,6 @@ namespace ConsoleApp;
 
 public static class Menus
 {
-    // public static readonly Menu OptionsMenu =
-    //     new Menu(
-    //         EMenuLevel.Secondary,
-    //         "TIC-TAC-TOE Information", [
-    //             new MenuItem()
-    //             {
-    //                 Shortcut = "X",
-    //                 Title = "X Starts",
-    //                 MenuItemAction = DummyMethod
-    //             },
-    //             new MenuItem()
-    //             {
-    //                 Shortcut = "O",
-    //                 Title = "O Starts",
-    //                 MenuItemAction = DummyMethod
-    //             },
-    //         ]);
-
     public static Menu MainMenu = new Menu(
         EMenuLevel.Main,
         "\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m \ud83d\ude00\ud83d\ude00", [
@@ -54,13 +36,6 @@ public static class Menus
             }
         ]);
 
-    private static string DummyMethod()
-    {
-        Console.Write("Just press any key to get out from here! (Any key - as a random choice from keyboard....)");
-        Console.ReadKey();
-        return "foobar";
-    }
-
     public static string AboutUsPage()
     {
         var aboutUsContent = 
@@ -87,12 +62,6 @@ public static class Menus
                     Title = "Return",
                     MenuItemAction = () => MainMenu.Run()
                 },
-                new MenuItem()
-                {
-                    Shortcut = "E",
-                    Title = "Exit",
-                    MenuItemAction = () => "E"
-                }
             },
             aboutUsContent 
         );
@@ -118,12 +87,6 @@ public static class Menus
                     Title = "Return",
                     MenuItemAction = () => MainMenu.Run()
                 },
-                new MenuItem()
-                {
-                    Shortcut = "E",
-                    Title = "Exit",
-                    MenuItemAction = () => "E"
-                }
             },
             aboutTheGameContent 
         );
@@ -162,17 +125,9 @@ public static class Menus
                     Title = "Return",
                     MenuItemAction = () => MainMenu.Run()
                 },
-                new MenuItem()
-                {
-                    Shortcut = "E",
-                    Title = "Exit",
-                    MenuItemAction = () => "E"
-                }
             },
             aboutTheGameRulesContent 
         );
-
-
         return aboutTheGameRulesMenu.Run();
     }
 

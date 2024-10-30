@@ -152,64 +152,6 @@ public class TicTacTwoBrain
 
         return count;
     }
-
-    // public EGamePiece? CheckForWin(int inputX, int inputY)
-    // {
-    //     EGamePiece player = _gameBoard[inputX, inputY];
-    //     
-    //     if (CheckHorizontal(inputX, inputY, player) ||
-    //         CheckVertical(inputX, inputY, player))
-    //     {
-    //         return player;
-    //     }
-    //     return null;
-    // }
-    //
-    // private bool CheckHorizontal(int inputX, int inputY, EGamePiece currentPiece)
-    // {
-    //     return CheckInDirection(inputX, inputY, 1, 0, currentPiece) + 
-    //         CheckInDirection(inputX, inputY, -1, 0, currentPiece) >= _gameConfiguration.WinCondition - 1; 
-    // }
-    //
-    // private bool CheckVertical(int inputX, int inputY, EGamePiece currentPiece)
-    // {
-    //     return CheckInDirection(inputX, inputY, 0, 1, currentPiece) +
-    //         CheckInDirection(inputX, inputY, 0, -1, currentPiece) >= _gameConfiguration.WinCondition - 1;
-    // }
-    //
-    // private bool CheckDiagonal(int inputX, int inputY, EGamePiece currentPiece)
-    // {
-    //     return CheckInDirection(inputX, inputY, 1, 1, currentPiece) +
-    //         CheckInDirection(inputX, inputY, -1, -1, currentPiece) + 
-    //         CheckInDirection(inputX, inputY, -1, 1, currentPiece) +
-    //         CheckInDirection(inputX, inputY, 1, -1, currentPiece) >= _gameConfiguration.WinCondition - 1; 
-    // }
-    //
-    //
-    //
-    // private int CheckInDirection(int startX, int startY, int x, int y, EGamePiece player)
-    // {
-    //     int count = 0;
-    //
-    //     for (int i = 1; i < _gameConfiguration.WinCondition; i++)
-    //     {
-    //         int checkX = startX + i * x;
-    //         int checkY = startY + i * y;
-    //         
-    //         if (checkX >= 0 && checkX < _gameConfiguration.BoardSizeWidth &&
-    //             checkY >= 0 && checkY < _gameConfiguration.BoardSizeHeight &&
-    //             _gameBoard[checkX, checkY] == player)
-    //         {
-    //             count++;
-    //         }
-    //         else
-    //         {
-    //             break;
-    //         }
-    //     }
-    //
-    //     return count;
-    // }
     
     public void ResetGame()
     {

@@ -1,42 +1,124 @@
+using ConsoleUI;
 using DAL;
 using GameBrain;
 using MenySystem;
 
 namespace ConsoleApp;
 
-public static class GameController
+public class GameController
 {
     private static readonly ConfigRepository ConfigRepository = new ConfigRepository();
 
+    private static (string, string) GetUsersNames()
+    {
+        string player1, player2;
+        Console.Clear();
+        Console.WriteLine("\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m");
+        Console.WriteLine("\x1b[1m\x1b[36m====================\x1b[0m\x1b[0m");
+        Console.Write("Enter 1st Player's name: ");
+        player1 = Console.ReadLine() ?? "Player 1";
+
+        do
+        {
+            Console.Write("Enter 2nd Player's name: ");
+            player2 = Console.ReadLine() ?? "Player 2";
+
+            if (player2 != player1)
+            {
+                break;
+            }
+            
+            Console.WriteLine("The 2nd player's name mus be different from the 1st player's name. Please enter different name.");
+        } while (true);
+        
+        return (player1, player2);
+    }
+    
+    private static EGamePiece GetStartingPlayer(string playerX, string playerO) 
+    {
+            Console.Clear();
+            Console.WriteLine("\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m");
+            Console.WriteLine("\x1b[1m\x1b[36m====================\x1b[0m\x1b[0m");
+            Console.WriteLine("Who will start the game?");
+            Console.WriteLine($"    1. {playerX}");
+            Console.WriteLine($"    2. {playerO}");
+            do
+            {
+                Console.Write("Insert 1 or 2 to choose who starts: ");
+                var startChoice = Console.ReadLine()?.Trim();
+            
+                if (startChoice == "1") return EGamePiece.X;
+                if (startChoice == "2") return EGamePiece.O;
+
+                Console.WriteLine("Invalid choice! Please enter '1' for the first player or '2' for the second player.");
+
+            } while (true);
+    }
+
+    private static (string, string) GetPlayersSymbol(string playerX, string playerO)
+    {
+        string symbolX, symbolO;
+
+        do
+        {
+            Console.Write($"Enter the symbol for {playerX} (default is 'X'): ");
+            symbolX = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrEmpty(symbolX))
+            {
+                symbolX = "X";
+            } else if (symbolX.Length > 1)
+            {
+                Console.WriteLine("Please enter only a single character.");
+                symbolX = null;
+            }
+            
+        } while (symbolX == null);
+
+        do
+        {
+            Console.Write($"Enter the symbol for {playerO} (default is 'X'): ");
+            symbolO = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrEmpty(symbolO))
+            {
+                symbolO = "O";
+            }
+            else if (symbolO == symbolX)
+            {
+                Console.WriteLine("The symbols for each player must be different.");
+                symbolO = null;
+            }
+            else if (symbolO.Length > 1)
+            {
+                Console.WriteLine("Please enter only a single character.");
+                symbolO = null;
+            }
+        } while (symbolO == null);
+
+        return (symbolX, symbolO);
+    }
+    
     public static string MainLoop()
     {
-        Console.Write("Enter Player X's name: ");
-        var playerX = Console.ReadLine() ?? "Player X";
-        
-        Console.Write("Enter Player O's name: ");
-        var playerO = Console.ReadLine() ?? "Player O";
-
-        EGamePiece startingPlayer = GetStartingPlayer();
-        
-        var chosenConfigShortcut = ChooseConfiguration();
-
-        // if (!int.TryParse(chosenConfigShortcut, out var configNo))
-        // {
-        //     return chosenConfigShortcut;
-        // }
+        int chosenConfigIndex = ChooseConfiguration();
+        var configNames = ConfigRepository.GetConfigurationNames();
 
         GameConfiguration chosenConfig;
         
-        if (chosenConfigShortcut == "custom")
+        if (chosenConfigIndex == configNames.Count)
         {
             chosenConfig = ConfigRepository.ConfigureCustomGame();
         }
         else
         {
-            chosenConfig = ConfigRepository.GetConfigurationByName(
-                ConfigRepository.GetConfigurationNames()[int.Parse(chosenConfigShortcut)]);
+            chosenConfig = ConfigRepository.GetConfigurationByName(configNames[chosenConfigIndex]);
         }
         
+        var (playerX, playerO) = GetUsersNames();
+        
+        
+        EGamePiece startingPlayer = GetStartingPlayer(playerX, playerO);
 
         var gameInstance = new TicTacTwoBrain(chosenConfig, playerX, playerO, startingPlayer);
         var moves = 0;
@@ -85,7 +167,8 @@ public static class GameController
                                 Console.WriteLine("\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m");
                                 Console.WriteLine("\x1b[1m\x1b[36m" + new string('=', gameInstance.DimX * 4) + "\x1b[0m\x1b[0m");
                                 Console.WriteLine();
-                                Console.WriteLine($"{winner} has won the game! \ud83e\udd73\ud83e\udd73\ud83e\udd73\ud83e\udd73 ");
+                                Console.WriteLine($"{gameInstance.GetCurrentPlayer()} has won the game! \ud83e\udd73\ud83e\udd73\ud83e\udd73\ud83e\udd73 ");
+                                Console.WriteLine();
                                 ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
                                 return "game over!";
                             }
@@ -119,30 +202,30 @@ public static class GameController
             }
             
         } while (true);
-
-        // return "Good Job PlayerName";
     }
 
-    private static string ChooseConfiguration()
+    private static int ChooseConfiguration()
     {
         var configMenuItems = new List<MenuItem>();
+        var configNames = ConfigRepository.GetConfigurationNames();
 
-        for (var i = 0; i < ConfigRepository.GetConfigurationNames().Count; i++)
+        for (var i = 0; i < configNames.Count; i++)
         {
-            var returnValue = i.ToString();
+            var indexReturnValue = i;
             configMenuItems.Add(new MenuItem()
             {
-                Title = ConfigRepository.GetConfigurationNames()[i],
+                Title = configNames[i],
                 Shortcut = (i + 1).ToString(),
-                MenuItemAction = () => returnValue
+                MenuItemAction = () => indexReturnValue.ToString()
             });
         }
 
+        var customConfigIndex = configNames.Count();
         configMenuItems.Add(new MenuItem()
         {
             Title = "Custom Configuration",
             Shortcut = (configMenuItems.Count + 1).ToString(),
-            MenuItemAction = () => "custom"
+            MenuItemAction = () =>customConfigIndex.ToString()
         });
         
         var configMenu = new Menu(EMenuLevel.Secondary,
@@ -151,7 +234,7 @@ public static class GameController
             isCustomMenu: true
         );
 
-        return configMenu.Run();
+        return int.Parse(configMenu.Run());
     }
     
     private static bool MoveGrid(TicTacTwoBrain gameInstance, string direction)
@@ -181,7 +264,7 @@ public static class GameController
 
     private static (int, int) InsertCoordinates(TicTacTwoBrain gameInstance)
     {
-        Console.WriteLine($"{gameInstance.GetCurrentPlayer()}'s ");
+        Console.WriteLine($"{gameInstance.GetCurrentPlayer()}'s turn to make a move");
         Console.Write("Give me coordinates <\x1b[1m\x1b[31mX\x1b[0m\x1b[0m,\x1b[1m\x1b[32mY\x1b[0m\x1b[0m> or save:");
     
        
@@ -208,19 +291,6 @@ public static class GameController
                 continue;
             }
             return(inputX, inputY);
-        }
-    }
-
-    private static EGamePiece GetStartingPlayer() 
-    {
-        while (true)
-        {
-            Console.Write("Who will start (X/0): ");
-            var startChoice = Console.ReadLine()?.Trim().ToUpper();
-            if (startChoice == "X") return EGamePiece.X;
-            if (startChoice == "O") return EGamePiece.O;
-
-            Console.WriteLine("Invalid choice! Please enter 'X' or 'O'.");
         }
     }
     private static void MovePiece(TicTacTwoBrain gameInstance, EGamePiece gamePiece)

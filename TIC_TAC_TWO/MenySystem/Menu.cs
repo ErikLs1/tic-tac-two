@@ -4,7 +4,7 @@ public class Menu
 {
     private string MenuHeader { get; set; }
     private static string _menuDivider = "\x1b[1m\x1b[36m=================\x1b[0m\x1b[0m";
-    private List<MenuItem> MenuItems { get; set; }
+    private HashSet<MenuItem> MenuItems { get; set; }
     private string? MenuContent { get; set; }
 
     private MenuItem _menuItemExit = new MenuItem()
@@ -22,7 +22,7 @@ public class Menu
     private MenuItem _menuItemReturnMain = new MenuItem()
     {
         Shortcut = "M",
-        Title = "Return to main menu"
+        Title = "Return to main menu",
     };
 
     private EMenuLevel _menuLevel { get; set; }
@@ -48,7 +48,7 @@ public class Menu
             throw new ApplicationException("Menu items cannot be empty.");
         }
 
-        MenuItems = menuItems;
+        MenuItems = new HashSet<MenuItem>(menuItems, new MenuItemComparer());
         _isCustomMenu = isCustomMenu;
         _menuLevel = menuLevel;
         MenuContent = menuContent;
@@ -65,9 +65,6 @@ public class Menu
         }
 
         MenuItems.Add(_menuItemExit);
-        
-        
-        // TODO: validate menu items for shortcut conflict!
     }
 
     public string Run()
