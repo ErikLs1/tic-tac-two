@@ -61,23 +61,24 @@ public class GameController
 
         do
         {
-            Console.Write($"Enter the symbol for {playerX} (default is 'X'): ");
+            Console.Write($"Enter the symbol for {playerX} (default is 'X'):");
             symbolX = Console.ReadLine()?.Trim();
 
             if (string.IsNullOrEmpty(symbolX))
             {
                 symbolX = "X";
-            } else if (symbolX.Length > 1)
-            {
-                Console.WriteLine("Please enter only a single character.");
-                symbolX = null;
-            }
+            } 
+            //else if (symbolX.Length > 1)
+            // {
+            //     Console.WriteLine("Please enter only a single character.");
+            //     symbolX = null;
+            // }
             
         } while (symbolX == null);
 
         do
         {
-            Console.Write($"Enter the symbol for {playerO} (default is 'X'): ");
+            Console.Write($"Enter the symbol for {playerO} (default is 'O'):");
             symbolO = Console.ReadLine()?.Trim();
 
             if (string.IsNullOrEmpty(symbolO))
@@ -89,11 +90,11 @@ public class GameController
                 Console.WriteLine("The symbols for each player must be different.");
                 symbolO = null;
             }
-            else if (symbolO.Length > 1)
-            {
-                Console.WriteLine("Please enter only a single character.");
-                symbolO = null;
-            }
+            // else if (symbolO.Length > 1)
+            // {
+            //     Console.WriteLine("Please enter only a single character.");
+            //     symbolO = null;
+            // }
         } while (symbolO == null);
 
         return (symbolX, symbolO);
@@ -116,7 +117,9 @@ public class GameController
         }
         
         var (playerX, playerO) = GetUsersNames();
-        
+
+        var (symbolX, symbolO) = GetPlayersSymbol(playerX, playerO);
+        Visualizer.SetPlayersSymbols(symbolX, symbolO);
         
         EGamePiece startingPlayer = GetStartingPlayer(playerX, playerO);
 
