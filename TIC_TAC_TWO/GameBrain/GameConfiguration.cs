@@ -9,7 +9,7 @@ public record struct GameConfiguration()
     public int GridWidth { get; set; } = 3;
     public int GridHeight { get; set; } = 3;
     public int WinCondition { get; set; } = 3;
-    public int MovePieceAfterNMoves { get; set; } = 0;
+    public int MovePieceAfterNMoves { get; set; } = 4;
 
     public override string ToString() =>
         $"Board size is {BoardSizeWidth}x{BoardSizeHeight}, " +

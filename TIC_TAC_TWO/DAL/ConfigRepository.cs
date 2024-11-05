@@ -4,7 +4,7 @@ namespace DAL;
 
 public class ConfigRepository
 {
-    private List<GameConfiguration> _gameConfigurations = new List<GameConfiguration>()
+    private static List<GameConfiguration> _gameConfigurations = new List<GameConfiguration>()
     {
         new GameConfiguration()
         {
@@ -22,7 +22,7 @@ public class ConfigRepository
         },
     };
 
-    public List<string> GetConfigurationNames()
+    public static List<string> GetConfigurationNames()
     {
         return _gameConfigurations
             .OrderBy(x => x.Name)
@@ -30,12 +30,12 @@ public class ConfigRepository
             .ToList();
     }
 
-    public GameConfiguration GetConfigurationByName(string name)
+    public static GameConfiguration GetConfigurationByName(string name)
     {
         return _gameConfigurations.Single(c => c.Name == name);
     }
 
-    public GameConfiguration ConfigureCustomGame()
+    public static GameConfiguration ConfigureCustomGame()
     {
         var config = new GameConfiguration();
         
@@ -53,7 +53,7 @@ public class ConfigRepository
         return config;
     }
 
-    private int CheckForValidInput(string prompt, int min, int? max = null)
+    private static int CheckForValidInput(string prompt, int min, int? max = null)
     {
         int inputValue;
 
