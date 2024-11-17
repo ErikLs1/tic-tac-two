@@ -2,7 +2,7 @@
 
 namespace DAL;
 
-public class ConfigRepository
+public class ConfigRepositoryHardcoded
 {
     private static List<GameConfiguration> _gameConfigurations = new List<GameConfiguration>()
     {
@@ -70,4 +70,6 @@ public class ConfigRepository
             Console.WriteLine($"Invalid input. Please enter a valid integer between {min} and {(max.HasValue ? max.Value.ToString() : "~")}.");
         }
     }
+    
+    
 }

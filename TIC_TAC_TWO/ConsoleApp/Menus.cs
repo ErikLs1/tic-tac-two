@@ -1,9 +1,13 @@
+using DAL;
 using MenySystem;
 
 namespace ConsoleApp;
 
 public static class Menus
 {
+    private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryJson();
+    private static readonly IGameRepository GameRepository = new GameRepositoryJson();
+    
     public static Menu MainMenu = new Menu(
         EMenuLevel.Main,
         "\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m \ud83d\ude00\ud83d\ude00", [
@@ -11,7 +15,7 @@ public static class Menus
             {
                 Shortcut = "N",
                 Title = "New game",
-                MenuItemAction = GameController.MainLoop
+                MenuItemAction = () => GameController.MainLoop(ConfigRepository, GameRepository)
             },
             
             new MenuItem()

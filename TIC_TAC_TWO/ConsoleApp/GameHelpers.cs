@@ -6,6 +6,14 @@ namespace ConsoleApp;
 
 public class GameHelpers
 {
+    private static IConfigRepository _configRepository = default!;
+    private static IGameRepository _gameRepository = default!;
+
+    public static void InitializeRepositories(IConfigRepository configRepository, IGameRepository gameRepository)
+    {
+        _configRepository = configRepository;
+        _gameRepository = gameRepository;
+    }
     
     public static void DisplayHeader(string title)
     {
@@ -86,15 +94,17 @@ public class GameHelpers
     public static GameConfiguration SelectConfiguration()
     {
         int chosenConfigIndex = ChooseConfiguration();
-        var configNames = ConfigRepository.GetConfigurationNames();
-        return chosenConfigIndex == configNames.Count
-            ? ConfigRepository.ConfigureCustomGame()
-            : ConfigRepository.GetConfigurationByName(configNames[chosenConfigIndex]);
+        var configNames = ConfigRepositoryHardcoded.GetConfigurationNames();
+        return chosenConfigIndex >= configNames.Count
+            ? ConfigRepositoryHardcoded.ConfigureCustomGame()
+            : ConfigRepositoryHardcoded.GetConfigurationByName(configNames[chosenConfigIndex]);
     }
 
     private static int ChooseConfiguration()
     {
-        var configMenuItems = ConfigRepository.GetConfigurationNames()
+        // var configNames = _configRepository.GetConfigurationNames();
+        // var savedGames = _gameRepository.GetSavedGames();
+        var configMenuItems = ConfigRepositoryHardcoded.GetConfigurationNames()
             .Select((name, index) => new MenuItem
             {
                 Title = name,
@@ -115,7 +125,7 @@ public class GameHelpers
             configMenuItems,
             isCustomMenu: true
         );
-
+        
         return int.Parse(configMenu.Run());
     }
 
@@ -213,6 +223,10 @@ public class GameHelpers
         while (true)
         {
             var input = Console.ReadLine()?.Trim();
+            if (input?.ToLower() == "save")
+            {
+                SaveGameAndExit(gameInstance);
+            }
             if (ParseCoordinates(input, out var x, out var y) && gameInstance.GetPiece(x, y) == EGamePiece.Empty)
             {
                 return (x, y);
@@ -220,6 +234,22 @@ public class GameHelpers
             
             Console.WriteLine("Invalid or occupied position. Try again.");
         }
+    }
+
+    private static void SaveGameAndExit(TicTacTwoBrain gameInstance)
+    {
+        Console.Write("Enter a name for your game: ");
+        var saveName = Console.ReadLine()?.Trim();
+        if (string.IsNullOrEmpty(saveName))
+        {
+            saveName = "GameSave";
+        }
+
+        var gameState = gameInstance.GetGameState();
+        _gameRepository.SaveGame(gameState, saveName);
+        
+        Console.WriteLine("Game has been saved. Exiting the game...");
+        Environment.Exit(0);
     }
 
     private static bool ParseCoordinates(string? input, out int x, out int y)

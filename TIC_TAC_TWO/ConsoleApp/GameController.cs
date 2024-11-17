@@ -7,10 +7,10 @@ namespace ConsoleApp;
 
 public class GameController
 {
-    private static readonly ConfigRepository ConfigRepository = new ConfigRepository();
-
-    public static string MainLoop()
+    public static string MainLoop(IConfigRepository configRepository, IGameRepository gameRepository)
     {
+        GameHelpers.InitializeRepositories(configRepository, gameRepository);
+        
         GameConfiguration chosenConfig = GameHelpers.SelectConfiguration();
         var (playerX, playerO) = GameHelpers.GetUsersNames();
         var (symbolX, symbolO) = GameHelpers.GetPlayersSymbol(playerX, playerO);
