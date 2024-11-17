@@ -12,15 +12,35 @@ public class TicTacTwoBrain
     private string _playerX;
     private string _playerO;
     
+    private string _playerXSymbol;
+    private string _playerOSymbol;
+    
     private (int x, int y) _gridPosition;
+    public int MoveCount { get; private set; }
 
+    public TicTacTwoBrain (GameState gameState)
+    {
+        _gameState = gameState;
+        _gameConfiguration = gameState.GameConfiguration;
+        _gameBoard = gameState.GameBoard;
+        _nextMoveBy = gameState.NextMoveBy;
+        _gridPosition = (gameState.GridPositionX, gameState.GridPositionY);
+        _playerX = gameState.PlayerX;
+        _playerO = gameState.PlayerO;
+        MoveCount = gameState.MoveCount;
+        _playerXSymbol = gameState.PlayerXSymbol;
+        _playerOSymbol = gameState.PlayerOSymbol;
+    }
 
-    public TicTacTwoBrain(GameConfiguration gameConfiguration, string playerX, string playerO, EGamePiece startingPlayer)
+    public TicTacTwoBrain(GameConfiguration gameConfiguration, string playerX, string playerO, EGamePiece startingPlayer, string playerXSymbol, string playerOSymbol)
     {
         _gameConfiguration = gameConfiguration;
         _playerX = playerX;
         _playerO = playerO;
         _nextMoveBy = startingPlayer;
+        MoveCount = 0;
+        _playerXSymbol = playerXSymbol;
+        _playerOSymbol = playerOSymbol;
 
         _gameBoard = new EGamePiece[gameConfiguration.BoardSizeWidth][];
         for (var x = 0; x < _gameBoard.Length; x++)
@@ -64,7 +84,11 @@ public class TicTacTwoBrain
             NextMoveBy = this._nextMoveBy,
             PlayerX = this._playerX,
             PlayerO = this._playerO,
-            MoveCount = this.Move
+            MoveCount = this.MoveCount,
+            GridPositionX = this._gridPosition.x,
+            GridPositionY = this._gridPosition.y,
+            PlayerOSymbol = this._playerXSymbol,
+            PlayerXSymbol = this._playerOSymbol
         };
     }
     public string GetGameStateJson()
@@ -128,6 +152,8 @@ public class TicTacTwoBrain
         
         _nextMoveBy = _nextMoveBy == EGamePiece.X ? EGamePiece.O : EGamePiece.X;
 
+        MoveCount++;
+        
         return true;
     }
     
@@ -146,6 +172,8 @@ public class TicTacTwoBrain
             }
             
             _nextMoveBy = _nextMoveBy == EGamePiece.X ? EGamePiece.O : EGamePiece.X;
+
+            MoveCount++;
         }
         else
         {

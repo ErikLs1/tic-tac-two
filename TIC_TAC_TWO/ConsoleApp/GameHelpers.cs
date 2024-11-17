@@ -147,13 +147,12 @@ public class GameHelpers
         } while (true);
     }
 
-    public static void HandlePlayerChoice(string choice, TicTacTwoBrain gameInstance, ref int moves)
+    public static void HandlePlayerChoice(string choice, TicTacTwoBrain gameInstance)
     {
         switch (choice)
         {
             case "A":
                 ExecuteMove(gameInstance);
-                moves++;
                 break;
             
             case "B":

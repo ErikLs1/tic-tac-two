@@ -4,6 +4,8 @@ namespace ConsoleUI;
 
 public class Visualizer
 {
+    public static string PlayerXSymbol => _playerXSymbol;
+    public static string PlayerOSymbol => _playerOSymbol;
     private  static string _playerXSymbol = "X";
     private  static string _playerOSymbol = "O";
 
@@ -108,8 +110,8 @@ public class Visualizer
     private static string DrawGamePiece(EGamePiece piece) =>
         piece switch
         {
-            EGamePiece.O => _playerXSymbol,
-            EGamePiece.X => _playerOSymbol,
+            EGamePiece.X => _playerXSymbol,
+            EGamePiece.O => _playerOSymbol,
             _ => " "
         };
 }
