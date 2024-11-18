@@ -134,6 +134,9 @@ public class TicTacTwoBrain
     public (int x, int y) GridPosition => _gridPosition;
     public int GridWidth => _gameConfiguration.GridWidth;
     public int GridHeight => _gameConfiguration.GridHeight;
+    
+    public int BoardWidth => _gameConfiguration.BoardSizeWidth;
+    public int BoardHeight => _gameConfiguration.BoardSizeHeight;
     public EGamePiece GetPiece(int x, int y) => _gameBoard[x][y];
 
     public bool MakeAMove(int x, int y)

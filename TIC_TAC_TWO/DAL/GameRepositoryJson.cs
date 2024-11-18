@@ -6,7 +6,6 @@ namespace DAL;
 public class GameRepositoryJson : IGameRepository
 {
     private static readonly string SaveDirectory = Path.Combine(FileHelper.BasePath, "Saves");
-    // "/Users/eriklihhats/Desktop/Dev/icd0008-24f/Configurations/";
     public void SaveGame(GameState gameState, string gameConfigName)
     {
         if (!Directory.Exists(SaveDirectory))
@@ -29,7 +28,7 @@ public class GameRepositoryJson : IGameRepository
         }
 
         return Directory.GetFiles(SaveDirectory, "*.game.json")
-            .Select(fullFileName => Path.GetFileNameWithoutExtension(fullFileName))
+            .Select(fullFileName => Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(fullFileName)))
             .ToList();
     }
     

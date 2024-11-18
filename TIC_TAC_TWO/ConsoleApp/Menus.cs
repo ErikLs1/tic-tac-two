@@ -17,6 +17,12 @@ public static class Menus
                 Title = "New game",
                 MenuItemAction = () => GameController.MainLoop(ConfigRepository, GameRepository)
             },
+            new MenuItem()
+            {
+                Shortcut = "L",
+                Title = "Saved Games",
+                MenuItemAction = LoadSavedGamesMenu
+            },
             
             new MenuItem()
             {
@@ -39,6 +45,55 @@ public static class Menus
                 MenuItemAction = AboutTheGameRulesPage
             }
         ]);
+
+    public static string LoadSavedGamesMenu()
+    {
+        var savedGameNames = GameRepository.GetSavedGames();
+
+        if (savedGameNames.Count == 0)
+        {
+            Console.WriteLine("No saved games found.");
+            Console.WriteLine("Press any key to return to the main menu.");
+            Console.ReadKey();
+            return MainMenu.Run();
+        }
+
+        var menuItems = new List<MenuItem>();
+        int index = 1;
+
+        foreach (var savedGame in savedGameNames)
+        {
+            var displayName = Path.GetFileNameWithoutExtension(savedGame);
+            var menuItem = new MenuItem()
+            {
+                Shortcut = index.ToString(),
+                Title = displayName,
+                MenuItemAction = () =>
+                {
+                    var gameState = GameRepository.LoadGame(savedGame);
+                    GameController.MainLoopWithLoadedGame(gameState, ConfigRepository, GameRepository);
+                    return "";
+                }
+            };
+            menuItems.Add(menuItem);
+            index++;
+        }
+        
+        menuItems.Add(new MenuItem()
+        {
+            Shortcut = "R",
+            Title = "Return",
+            MenuItemAction = () => MainMenu.Run()
+        });
+
+        var savedGamesMenu = new Menu(
+            EMenuLevel.Secondary,
+            "\x1b[1m\x1b[35mSaved Games\x1b[0m\x1b[0m",
+            menuItems
+        );
+
+        return savedGamesMenu.Run();
+    }
 
     public static string AboutUsPage()
     {

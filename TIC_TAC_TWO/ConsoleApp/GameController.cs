@@ -21,8 +21,35 @@ public class GameController
         while (true)
         {
             Console.Clear();
-            GameHelpers.DisplayHeader("TIC-TAC-TWO (🥷 🆚 🤺)");
+            GameHelpers.DisplayHeader("BATTLE (🥷 🆚 🤺)");
             ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
+            Console.WriteLine();
+
+            if (gameInstance.MoveCount >= 4)
+            {
+                string choice = GameHelpers.GetPlayerChoice();
+                GameHelpers.HandlePlayerChoice(choice, gameInstance);
+            }
+            else
+            {
+                GameHelpers.ExecuteMove(gameInstance);
+            }
+        }
+    }
+    
+    public static void MainLoopWithLoadedGame(GameState gameState, IConfigRepository configRepository, IGameRepository gameRepository)
+    {
+        GameHelpers.InitializeRepositories(configRepository, gameRepository);
+
+        var gameInstance = new TicTacTwoBrain(gameState);
+
+        Visualizer.SetPlayersSymbols(gameState.PlayerXSymbol, gameState.PlayerOSymbol);
+        
+        while (true)
+        {
+            Console.Clear();
+            GameHelpers.DisplayHeader("TIC-TAC-TWO (🥷 🆚 🤺)");
+            Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
             Console.WriteLine();
 
             if (gameInstance.MoveCount >= 4)

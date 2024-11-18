@@ -43,7 +43,8 @@ public class GameHelpers
             
             Console.WriteLine("The 2nd player's name must be different from the 1st player's name. Please enter a different name.");
         } while (true);
-
+        
+        Console.Clear();
         return (player1, player2);
     }
     
@@ -69,6 +70,7 @@ public class GameHelpers
 
     public static (string, string) GetPlayersSymbol(string playerX, string playerO)
     {
+        DisplayHeader("");
         string symbolX = PromptForSymbol($"{playerX} (default is 'X')", "X");
         string symbolO;
 
@@ -86,9 +88,24 @@ public class GameHelpers
 
     private static string PromptForSymbol(string player, string defaultSymbol)
     {
-        Console.Write($"Enter the symbol for {player}: ");
-        var symbol = Console.ReadLine()?.Trim();
-        return string.IsNullOrEmpty(symbol) ? defaultSymbol : symbol;
+        string symbol;
+        do
+        {
+            Console.Write($"Enter the symbol for {player}: ");
+            symbol = Console.ReadLine()?.Trim()!;
+
+            if (string.IsNullOrEmpty(symbol))
+            {
+                return defaultSymbol;
+            }
+
+            if (symbol.Length is 1 or 2)
+            {
+                return symbol;
+            }
+
+            Console.WriteLine("Wrong input. Only one character is allowed.");
+        } while (true);
     }
     
     public static GameConfiguration SelectConfiguration()
@@ -102,8 +119,6 @@ public class GameHelpers
 
     private static int ChooseConfiguration()
     {
-        // var configNames = _configRepository.GetConfigurationNames();
-        // var savedGames = _gameRepository.GetSavedGames();
         var configMenuItems = ConfigRepositoryHardcoded.GetConfigurationNames()
             .Select((name, index) => new MenuItem
             {
@@ -140,7 +155,7 @@ public class GameHelpers
         do
         {
             Console.Write("I choose: ");
-            choice = Console.ReadLine()?.Trim()!;
+            choice = Console.ReadLine()?.Trim().ToUpper()!;
             if (choice == "A" || choice == "B" || choice == "C") return choice;
             
             Console.WriteLine("Invalid choice. Please select A, B or C.");
@@ -226,7 +241,10 @@ public class GameHelpers
             {
                 SaveGameAndExit(gameInstance);
             }
-            if (ParseCoordinates(input, out var x, out var y) && gameInstance.GetPiece(x, y) == EGamePiece.Empty)
+            
+            if (ParseCoordinates(input, out var x, out var y)
+                && IsWithinBounds(gameInstance, x, y)
+                && gameInstance.GetPiece(x, y) == EGamePiece.Empty)
             {
                 return (x, y);
             }
@@ -258,6 +276,14 @@ public class GameHelpers
         return parts != null && 
                parts.Length == 2 && int.TryParse(parts[0], out x) && 
                int.TryParse(parts[1], out y);
+    }
+
+    private static bool IsWithinBounds(TicTacTwoBrain gameInstance, int x, int y)
+    {
+        int boardWidth = gameInstance.BoardWidth;
+        int boardHeight = gameInstance.BoardWidth;
+
+        return x >= 0 && x < boardWidth && y >= 0 && y < boardHeight;
     }
     
     private static void MovePiece(TicTacTwoBrain gameInstance, EGamePiece gamePiece)
