@@ -31,7 +31,7 @@ public class GameRepositoryJson : IGameRepository
             .Select(fullFileName => Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(fullFileName)))
             .ToList();
     }
-    
+
     public GameState LoadGame(string gameConfigName)
     {
         var fileName = $"{gameConfigName}.game.json";
@@ -40,5 +40,19 @@ public class GameRepositoryJson : IGameRepository
 
         var json = File.ReadAllText(filePath);
         return JsonSerializer.Deserialize<GameState>(json);
+    }
+    
+    public void DeleteGame(string gameName)
+    {
+        var filePath = Path.Combine(FileHelper.BasePath, Path.DirectorySeparatorChar + "Saves" + Path.DirectorySeparatorChar + gameName + FileHelper.GameExtension);
+        if (File.Exists(FileHelper.BasePath + filePath))
+        {
+            File.Delete(FileHelper.BasePath + filePath);
+        }
+        else
+        {
+            Console.WriteLine(FileHelper.BasePath + filePath);
+            Console.WriteLine($"File not found: {filePath}");
+        }
     }
 }

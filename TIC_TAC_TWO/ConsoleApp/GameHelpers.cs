@@ -6,11 +6,11 @@ namespace ConsoleApp;
 
 public class GameHelpers
 {
-    // private static IConfigRepository _configRepository = new ConfigRepositoryJson();
-    // private static IGameRepository _gameRepository = new GameRepositoryJson();
+    private static IConfigRepository _configRepository = new ConfigRepositoryJson();
+    private static IGameRepository _gameRepository = new GameRepositoryJson();
     
-    private static IConfigRepository _configRepository = new ConfigRepositoryDb();
-    private static IGameRepository _gameRepository = new GameRepositoryDb();
+    // private static IConfigRepository _configRepository = new ConfigRepositoryDb();
+    // private static IGameRepository _gameRepository = new GameRepositoryDb();
 
     public static void InitializeRepositories(IConfigRepository configRepository, IGameRepository gameRepository)
     {

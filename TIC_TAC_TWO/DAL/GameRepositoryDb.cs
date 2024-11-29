@@ -103,4 +103,15 @@ public class GameRepositoryDb : IGameRepository
             .Select(g => g.SaveName)
             .ToList();
     }
+
+    public void DeleteGame(string gameName)
+    {
+        using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
+        var game = context.Games.FirstOrDefault(g => g.SaveName == gameName);
+        if (game != null)
+        {
+            context.Games.Remove(game);
+            context.SaveChanges();
+        }
+    }
 }

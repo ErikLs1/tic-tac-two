@@ -5,10 +5,10 @@ namespace ConsoleApp;
 
 public static class Menus
 {
-    // private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryJson();
-    // private static readonly IGameRepository GameRepository = new GameRepositoryJson();
-    private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryDb();
-    private static readonly IGameRepository GameRepository = new GameRepositoryDb();
+    private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryJson();
+    private static readonly IGameRepository GameRepository = new GameRepositoryJson();
+    // private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryDb();
+    // private static readonly IGameRepository GameRepository = new GameRepositoryDb();
     
     public static Menu MainMenu = new Menu(
         EMenuLevel.Main,
@@ -72,9 +72,7 @@ public static class Menus
                 Title = displayName,
                 MenuItemAction = () =>
                 {
-                    var gameState = GameRepository.LoadGame(savedGame);
-                    GameController.MainLoopWithLoadedGame(gameState, ConfigRepository, GameRepository);
-                    return "";
+                    return SavedGameOptionsMenu(savedGame);
                 }
             };
             menuItems.Add(menuItem);
@@ -95,6 +93,60 @@ public static class Menus
         );
 
         return savedGamesMenu.Run();
+    }
+
+    public static string SavedGameOptionsMenu(string savedGameName)
+    {
+        var menuItems = new List<MenuItem>()
+        {
+            new MenuItem()
+            {
+                Shortcut = "I",
+                Title = "Load Game",
+                MenuItemAction = () =>
+                {
+                    var gameState = GameRepository.LoadGame(savedGameName);
+                    GameController.MainLoopWithLoadedGame(gameState, ConfigRepository, GameRepository);
+                    return "";
+                }
+            },
+            
+            new MenuItem()
+            {
+                Shortcut = "D",
+                Title = "Delete Game",
+                MenuItemAction = () =>
+                {
+                    GameRepository.DeleteGame(savedGameName);
+                    Console.WriteLine("Game deleted.");
+                    // Console.WriteLine(FileHelper.BasePath + savedGameName);
+                    Console.WriteLine("Press any key to return back.");
+                    Console.ReadKey();
+                    return LoadSavedGamesMenu();
+                }
+            },
+            
+            new MenuItem()
+            {
+                Shortcut = "R",
+                Title = "Return",
+                MenuItemAction = LoadSavedGamesMenu
+            },
+            
+            new MenuItem()
+            {
+                Shortcut = "E",
+                Title = "Exit",
+                MenuItemAction = LoadSavedGamesMenu
+            }
+        };
+
+        var savedGamesOptionsMenu = new Menu(
+            EMenuLevel.Secondary,
+            "\x1b[1m\x1b[35mSaved Games\x1b[0m\x1b[0m" + $"\x1b[1m\x1b[35m - {savedGameName}\x1b[0m\x1b[0m",
+            menuItems
+        );
+        return savedGamesOptionsMenu.Run();
     }
 
     public static string AboutUsPage()
