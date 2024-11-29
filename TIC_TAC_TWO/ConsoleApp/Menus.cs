@@ -5,8 +5,10 @@ namespace ConsoleApp;
 
 public static class Menus
 {
-    private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryJson();
-    private static readonly IGameRepository GameRepository = new GameRepositoryJson();
+    // private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryJson();
+    // private static readonly IGameRepository GameRepository = new GameRepositoryJson();
+    private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryDb();
+    private static readonly IGameRepository GameRepository = new GameRepositoryDb();
     
     public static Menu MainMenu = new Menu(
         EMenuLevel.Main,
