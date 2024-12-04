@@ -79,16 +79,16 @@ public class TicTacTwoBrain
 
     public GameState GetGameState()
     {
-        return new GameState(this.GameBoard, this._gameConfiguration)
+        return new GameState(GameBoard, _gameConfiguration)
         {
-            NextMoveBy = this._nextMoveBy,
-            PlayerX = this._playerX,
-            PlayerO = this._playerO,
-            MoveCount = this.MoveCount,
-            GridPositionX = this._gridPosition.x,
-            GridPositionY = this._gridPosition.y,
-            PlayerOSymbol = this._playerXSymbol,
-            PlayerXSymbol = this._playerOSymbol
+            NextMoveBy = _nextMoveBy,
+            PlayerX = _playerX,
+            PlayerO = _playerO,
+            MoveCount = MoveCount,
+            GridPositionX = _gridPosition.x,
+            GridPositionY = _gridPosition.y,
+            PlayerOSymbol = _playerXSymbol,
+            PlayerXSymbol = _playerOSymbol
         };
     }
     public string GetGameStateJson()

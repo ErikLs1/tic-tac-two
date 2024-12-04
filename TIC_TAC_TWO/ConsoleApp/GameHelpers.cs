@@ -206,12 +206,20 @@ public class GameHelpers
 
     private static void ExecuteGridMove(TicTacTwoBrain gameInstance)
     {
-        Console.Write("Enter your move (up, down, left, right, up-left, up-right, down-left, down-right): ");
-        string move = Console.ReadLine()?.ToLower()!;
-        if (!MoveGrid(gameInstance, move))
+        string move;
+        bool isValidMove = false;
+        
+        do
         {
-            Console.WriteLine("Invalid direction. Try again.");
-        }
+            Console.Write("Enter your move (up, down, left, right, up-left, up-right, down-left, down-right): ");
+            move = Console.ReadLine()?.ToLower()!;
+            isValidMove = MoveGrid(gameInstance, move);
+            if (!isValidMove)
+            {
+                Console.WriteLine("Wrong input.Please try again.");
+            }
+        } while (!isValidMove);
+        
         gameInstance. _nextMoveBy = gameInstance._nextMoveBy == EGamePiece.X ? EGamePiece.O : EGamePiece.X;
     }
     
@@ -288,19 +296,36 @@ public class GameHelpers
 
         return x >= 0 && x < boardWidth && y >= 0 && y < boardHeight;
     }
+    private static bool IsWithinBoundsGrid(TicTacTwoBrain gameInstance, int x, int y)
+    {
+        var gridPosition = gameInstance.GridPosition;
+
+        int gridLeft = gridPosition.x;
+        int gridTop = gridPosition.y;
+        int gridRight = gridLeft + gameInstance.GridWidth;
+        int gridBottom = gridTop + gameInstance.GridHeight;
+        // Console.WriteLine($"Grid bounds: Left={gridLeft}, Right={gridRight}, Top={gridTop}, Bottom={gridBottom}");
+        return x >= gridLeft && x < gridRight && y >= gridTop && y < gridBottom;
+    }
     
     private static void MovePiece(TicTacTwoBrain gameInstance, EGamePiece gamePiece)
     {
         while (true)
         {
-            Console.Write($"It's {gamePiece}'s turn. Enter the coordinates of the piece you want to move <x,y>: ");
+            Console.Write($"It's {gameInstance.GetGameState()}'s turn. Enter the coordinates of the piece you want to move <x,y>: ");
             var startInput = Console.ReadLine()!;
             var startInputSplit = startInput.Split(",");
     
-            if (startInputSplit.Length != 2 || !int.TryParse(startInputSplit[0], out var startX) ||
+            if (startInputSplit.Length != 2 || 
+                !int.TryParse(startInputSplit[0], out var startX) ||
                 !int.TryParse(startInputSplit[1], out var startY))
             {
                 Console.WriteLine("Wrong input. PLease, make sure coordinates are in the correct format.");
+                continue;
+            }
+            if (!IsWithinBoundsGrid(gameInstance, startX, startY))
+            {
+                Console.WriteLine("The selected piece is outside the grid. Please choose a piece within the grid.");
                 continue;
             }
             
@@ -320,6 +345,13 @@ public class GameHelpers
                 Console.WriteLine("Wrong input. Please, make sure the coordinates are in the correct format. ");
                 continue;
             }
+            
+            if (!IsWithinBoundsGrid(gameInstance, targetX, targetY))
+            {
+                Console.WriteLine("The piece can only be moved within the grid. Please choose another position.");
+                continue;
+            }
+            
             if (gameInstance.GetPiece(targetX, targetY) != EGamePiece.Empty)
             {
                 Console.WriteLine("This spot is occupied. Chose another place.");

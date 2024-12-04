@@ -13,7 +13,7 @@ public class GameState
     public int GridPositionY { get; set; }
     public string PlayerXSymbol { get; set; }
     public string PlayerOSymbol { get; set; }
-
+    // public string? SaveName { get; set; }
     public GameState(EGamePiece[][] gameBoard, GameConfiguration gameConfiguration)
     {
         GameBoard = gameBoard;
