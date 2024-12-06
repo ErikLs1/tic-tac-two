@@ -17,5 +17,5 @@ public class GameConfiguration
     public int WinCondition { get; set; }
     public int MovePieceAfterNMoves { get; set; }
     
-    public ICollection<Game>? Games { get; set; }
+    //public ICollection<Game>? Games { get; set; }
 }

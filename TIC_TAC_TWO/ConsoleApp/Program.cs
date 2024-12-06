@@ -3,6 +3,7 @@ using DAL;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 Menus.MainMenu.Run();
+//Console.WriteLine($"Data Source={FileHelper.BasePath}/app.db");
 // Console.WriteLine("hello");
 // var connectionString = $"Data Source={FileHelper.BasePath + Path.DirectorySeparatorChar}app.db";
 //

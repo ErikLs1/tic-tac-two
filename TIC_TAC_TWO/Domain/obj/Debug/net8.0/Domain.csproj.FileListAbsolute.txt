@@ -1,0 +1,12 @@
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/bin/Debug/net8.0/Domain.deps.json
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/bin/Debug/net8.0/Domain.dll
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/bin/Debug/net8.0/Domain.pdb
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/Domain.csproj.AssemblyReference.cache
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/Domain.AssemblyInfoInputs.cache
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/Domain.AssemblyInfo.cs
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/Domain.csproj.CoreCompileInputs.cache
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/Domain.dll
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/refint/Domain.dll
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/Domain.pdb
+/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/Domain/obj/Debug/net8.0/ref/Domain.dll

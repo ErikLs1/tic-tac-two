@@ -7,7 +7,6 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {
-        // Put in specific directory like with JSON
         var connectionString = $"Data Source={FileHelper.BasePath}/app.db";
 
         var contextOptions = new DbContextOptionsBuilder<AppDbContext>()

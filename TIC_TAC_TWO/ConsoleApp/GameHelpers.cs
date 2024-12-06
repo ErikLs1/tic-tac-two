@@ -6,11 +6,11 @@ namespace ConsoleApp;
 
 public class GameHelpers
 {
-    private static IConfigRepository _configRepository = new ConfigRepositoryJson();
-    private static IGameRepository _gameRepository = new GameRepositoryJson();
+    // private static IConfigRepository _configRepository = new ConfigRepositoryJson();
+    // private static IGameRepository _gameRepository = new GameRepositoryJson();
     
-    // private static IConfigRepository _configRepository = new ConfigRepositoryDb();
-    // private static IGameRepository _gameRepository = new GameRepositoryDb();
+    private static IConfigRepository _configRepository = new ConfigRepositoryDb();
+    private static IGameRepository _gameRepository = new GameRepositoryDb();
 
     public static void InitializeRepositories(IConfigRepository configRepository, IGameRepository gameRepository)
     {
@@ -312,7 +312,7 @@ public class GameHelpers
     {
         while (true)
         {
-            Console.Write($"It's {gameInstance.GetGameState()}'s turn. Enter the coordinates of the piece you want to move <x,y>: ");
+            Console.Write($"It's {gamePiece}'s turn. Enter the coordinates of the piece you want to move <x,y>: ");
             var startInput = Console.ReadLine()!;
             var startInputSplit = startInput.Split(",");
     

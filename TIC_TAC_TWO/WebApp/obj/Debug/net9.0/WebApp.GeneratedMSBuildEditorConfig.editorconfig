@@ -1,0 +1,97 @@
+is_global = true
+build_property.TargetFramework = net9.0
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = WebApp
+build_property.RootNamespace = WebApp
+build_property.ProjectDir = /Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Configurations/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29uZmlndXJhdGlvbnMvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Configurations/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29uZmlndXJhdGlvbnMvRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Configurations/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29uZmlndXJhdGlvbnMvRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Configurations/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29uZmlndXJhdGlvbnMvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Configurations/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ29uZmlndXJhdGlvbnMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Games/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvR2FtZXMvQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Games/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvR2FtZXMvRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Games/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvR2FtZXMvRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Games/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvR2FtZXMvRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Games/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvR2FtZXMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/eriklihhats/Desktop/Dev/icd0008-24f/TIC_TAC_TWO/WebApp/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-qeb871jn8t
