@@ -6,28 +6,21 @@ public class Game
 {
     // Primary Key
     public int Id { get; set; }
-    public DateTime CreatedAt { get; set; }
-    
-    // Foreign key
-    public int ConfigurationId { get; set; }
     public GameConfiguration Configuration { get; set; } = default!;
     
-    // public int UserId { get; set; }
-    // public User User { get; set; } = default!;
+    // Foreign key
+
+    public int PlayerXId { get; set; }
+    public User PlayerX { get; set; } = default!;
+    
+    public int PlayerOId { get; set; }
+    public User PlayerO { get; set; } = default!;
+    
+    //======================================
+    public DateTime CreatedAt { get; set; }
     
     [MaxLength(128)]
     public string SaveName { get; set; } = default!;
-
-    [MaxLength(128)]
-    public string PlayerXName { get; set; } = default!;
-    
-    [MaxLength(128)]
-    public string PlayerXSymbol { get; set; } = default!;
-    [MaxLength(128)]
-    public string PlayerOName { get; set; } = default!;
-    
-    [MaxLength(128)]
-    public string PlayerOSymbol { get; set; } = default!;
     
     public int NextMoveBy { get; set; }
     public int MoveCount { get; set; }
@@ -36,4 +29,10 @@ public class Game
 
     [MaxLength(10240)]
     public string GameBoardSerialized { get; set; } = default!;
+
+    [MaxLength(128)]
+    public string PlayerXSymbol { get; set; } = "X";
+    
+    [MaxLength(128)]
+    public string PlayerOSymbol { get; set; } = "O";
 }

@@ -1,0 +1,97 @@
+@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApp.Pages.Games.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].PlayerX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].PlayerO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].SaveName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].NextMoveBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].MoveCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GridPositionX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GridPositionY)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GameBoardSerialized)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].PlayerXSymbol)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].PlayerOSymbol)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Game) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlayerX.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlayerO.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaveName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NextMoveBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MoveCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridPositionX)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridPositionY)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameBoardSerialized)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlayerXSymbol)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlayerOSymbol)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
