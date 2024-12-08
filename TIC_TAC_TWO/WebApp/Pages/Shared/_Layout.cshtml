@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    bool isAdmin = Convert.ToBoolean(ViewData["IsAdmin"] ?? false);
+    string userName = (string)(ViewData["UserName"] ?? "");
+    bool isLoggedIn = !string.IsNullOrWhiteSpace(userName);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -21,17 +29,41 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Configurations/Index">Configurations</a>
+                        <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/Privacy">Privacy</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Games/Index">Games</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                    </li>
+                    @if (isLoggedIn)
+                    {
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/Configurations/Index">Configurations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/Games/Index">Games</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/Users/Index">Users</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/SavedGames">Load Games</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/AboutUs">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/History">History</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-route-UserName="@userName" asp-route-IsAdmin="@isAdmin" asp-page="/Rules">Rules</a>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
         </div>

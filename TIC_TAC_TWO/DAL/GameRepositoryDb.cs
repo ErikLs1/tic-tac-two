@@ -12,41 +12,51 @@ public class GameRepositoryDb : IGameRepository
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
 
-        var config = context.Configurations.FirstOrDefault(c => c.Name == gameState.GameConfiguration.Name);
-        
-        if (config == null)
+        var playerX = context.Users.FirstOrDefault(u => u.Username == gameState.PlayerX);
+        if (playerX == null)
         {
-            config = new GameConfiguration()
-            {
-                Name = gameState.GameConfiguration.Name,
-                BoardSizeWidth = gameState.GameConfiguration.BoardSizeWidth,
-                BoardSizeHeight = gameState.GameConfiguration.BoardSizeHeight,
-                GridWidth = gameState.GameConfiguration.GridWidth,
-                GridHeight = gameState.GameConfiguration.GridHeight,
-                WinCondition = gameState.GameConfiguration.WinCondition,
-                MovePieceAfterNMoves = gameState.GameConfiguration.MovePieceAfterNMoves
-            };
-            context.Configurations.Add(config);
-            context.SaveChanges();
+            throw new Exception($"User '{gameState.PlayerX}' not found");
         }
 
+        var playerO = context.Users.FirstOrDefault(u => u.Username == gameState.PlayerO);
+        if (playerO == null)
+        {
+            throw new Exception($"User '{gameState.PlayerO}' not found");
+        }
+
+        // var config = context.Configurations.FirstOrDefault(c => c.Name == gameState.GameConfiguration.Name);
+
+
+        var config = new GameConfiguration()
+        {
+            Name = gameState.GameConfiguration.Name,
+            BoardSizeWidth = gameState.GameConfiguration.BoardSizeWidth,
+            BoardSizeHeight = gameState.GameConfiguration.BoardSizeHeight,
+            GridWidth = gameState.GameConfiguration.GridWidth,
+            GridHeight = gameState.GameConfiguration.GridHeight,
+            WinCondition = gameState.GameConfiguration.WinCondition,
+            MovePieceAfterNMoves = gameState.GameConfiguration.MovePieceAfterNMoves
+        };
+        // context.Configurations.Add(config);
+        // context.SaveChanges();
+        
         var timeStamp = DateTime.Now;
         var saveNameWithTimestamp = $"{gameConfigName}_{timeStamp:yyyy-MM-dd_HH-mm-ss}";
-        
+
         var game = new Game()
         {
             CreatedAt = timeStamp,
-            ConfigurationId = config.Id,
             SaveName = saveNameWithTimestamp,
-            PlayerXName = gameState.PlayerX,
-            PlayerXSymbol = gameState.PlayerXSymbol,
-            PlayerOName = gameState.PlayerO,
-            PlayerOSymbol = gameState.PlayerOSymbol,
-            NextMoveBy = (int) gameState.NextMoveBy,
+            PlayerXId = playerX.Id,
+            PlayerOId = playerO.Id,
+            NextMoveBy = (int)gameState.NextMoveBy,
             MoveCount = gameState.MoveCount,
             GridPositionX = gameState.GridPositionX,
             GridPositionY = gameState.GridPositionY,
-            GameBoardSerialized = JsonSerializer.Serialize(gameState.GameBoard)
+            GameBoardSerialized = JsonSerializer.Serialize(gameState.GameBoard),
+            PlayerXSymbol = gameState.PlayerXSymbol,
+            PlayerOSymbol = gameState.PlayerOSymbol,
+            Configuration = config
         };
 
         context.Games.Add(game);
@@ -58,6 +68,8 @@ public class GameRepositoryDb : IGameRepository
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
         var game = context.Games
             .Include(g => g.Configuration)
+            .Include(g => g.PlayerX)
+            .Include(g => g.PlayerO)
             .FirstOrDefault(g => g.SaveName == gameConfigName);
 
         if (game == null)
@@ -77,21 +89,20 @@ public class GameRepositoryDb : IGameRepository
             WinCondition = game.Configuration.WinCondition,
             MovePieceAfterNMoves = game.Configuration.MovePieceAfterNMoves
         };
-        
+
         var gameState = new GameState(gameBoard, gameConfiguration)
         {
             NextMoveBy = (EGamePiece)game.NextMoveBy,
-            
-            PlayerX = game.PlayerXName,
-            PlayerO = game.PlayerOName,
+            PlayerX = game.PlayerX.Username,
+            PlayerO = game.PlayerO.Username,
             PlayerXSymbol = game.PlayerXSymbol,
             PlayerOSymbol = game.PlayerOSymbol,
             MoveCount = game.MoveCount,
             GridPositionX = game.GridPositionX,
             GridPositionY = game.GridPositionY,
         };
-        
-        
+
+
         return gameState;
     }
 

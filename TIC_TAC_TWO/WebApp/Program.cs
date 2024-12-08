@@ -9,6 +9,13 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 
+// IMPLEMENTATION CHANGE
+// builder.Services.AddScoped<IConfigRepository, ConfigRepositoryJson>();
+builder.Services.AddScoped<IConfigRepository, ConfigRepositoryDb>();
+
+// builder.Services.AddScoped<IGameRepository, GameRepositoryJson>();
+builder.Services.AddScoped<IGameRepository, GameRepositoryDb>();
+    
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Add services to the container.
@@ -38,3 +45,8 @@ app.MapRazorPages()
     .WithStaticAssets();
 
 app.Run();
+
+// builder.Services
+// .AddTransient<>() - create new one every time
+// .AddSingleton<>() - create new one on first try, all the next requests get existing
+// .AddScoped<>() - create new one for every web request
