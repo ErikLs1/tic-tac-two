@@ -1,0 +1,79 @@
+@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model WebApp.Pages.Games.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Game.Id" />
+            <div class="form-group">
+                
+                <label asp-for="Game.CreatedAt" class="control-label"></label>
+                <input asp-for="Game.CreatedAt" class="form-control" />
+                <span asp-validation-for="Game.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.ConfigurationId" class="control-label"></label>
+                <select asp-for="Game.ConfigurationId" class="form-control" asp-items="ViewBag.ConfigurationId"></select>
+                <span asp-validation-for="Game.ConfigurationId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.SaveName" class="control-label"></label>
+                <input asp-for="Game.SaveName" class="form-control" />
+                <span asp-validation-for="Game.SaveName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.NextMoveBy" class="control-label"></label>
+                <input asp-for="Game.NextMoveBy" class="form-control" />
+                <span asp-validation-for="Game.NextMoveBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.MoveCount" class="control-label"></label>
+                <input asp-for="Game.MoveCount" class="form-control" />
+                <span asp-validation-for="Game.MoveCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.GridPositionX" class="control-label"></label>
+                <input asp-for="Game.GridPositionX" class="form-control" />
+                <span asp-validation-for="Game.GridPositionX" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.GridPositionY" class="control-label"></label>
+                <input asp-for="Game.GridPositionY" class="form-control" />
+                <span asp-validation-for="Game.GridPositionY" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.GameBoardSerialized" class="control-label"></label>
+                <input asp-for="Game.GameBoardSerialized" class="form-control" />
+                <span asp-validation-for="Game.GameBoardSerialized" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
