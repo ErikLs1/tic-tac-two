@@ -4,17 +4,6 @@ namespace ConsoleUI;
 
 public class Visualizer
 {
-    public static string PlayerXSymbol => _playerXSymbol;
-    public static string PlayerOSymbol => _playerOSymbol;
-    private  static string _playerXSymbol = "X";
-    private  static string _playerOSymbol = "O";
-
-    public static void SetPlayersSymbols(string playerXSymbol, string playerOSymbol)
-    {
-        _playerXSymbol = playerXSymbol;
-        _playerOSymbol = playerOSymbol;
-    }
-    
     public static void DrawBoard(TicTacTwoBrain gameInstance, int gridX, int gridY)
     {
         Console.Write("   0   ");
@@ -110,8 +99,8 @@ public class Visualizer
     private static string DrawGamePiece(EGamePiece piece) =>
         piece switch
         {
-            EGamePiece.X => _playerXSymbol,
-            EGamePiece.O => _playerOSymbol,
+            EGamePiece.X => "X",
+            EGamePiece.O => "O",
             _ => " "
         };
 }

@@ -6,14 +6,9 @@ public class GameState
     public EGamePiece NextMoveBy { get; set; } = EGamePiece.X;
 
     public GameConfiguration GameConfiguration { get; set; }
-    public string PlayerX { get; set; }
-    public string PlayerO { get; set; }
     public int MoveCount { get; set; }
     public int GridPositionX { get; set; }
     public int GridPositionY { get; set; }
-    public string PlayerXSymbol { get; set; }
-    public string PlayerOSymbol { get; set; }
-    // public string? SaveName { get; set; }
     public GameState(EGamePiece[][] gameBoard, GameConfiguration gameConfiguration)
     {
         GameBoard = gameBoard;

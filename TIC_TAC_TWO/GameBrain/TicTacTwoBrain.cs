@@ -8,12 +8,6 @@ public class TicTacTwoBrain
     public EGamePiece _nextMoveBy { get; set; } = EGamePiece.X;
 
     private GameConfiguration _gameConfiguration;
-
-    private string _playerX;
-    private string _playerO;
-    
-    private string _playerXSymbol;
-    private string _playerOSymbol;
     
     private (int x, int y) _gridPosition;
     public int MoveCount { get; private set; }
@@ -25,22 +19,14 @@ public class TicTacTwoBrain
         _gameBoard = gameState.GameBoard;
         _nextMoveBy = gameState.NextMoveBy;
         _gridPosition = (gameState.GridPositionX, gameState.GridPositionY);
-        _playerX = gameState.PlayerX;
-        _playerO = gameState.PlayerO;
         MoveCount = gameState.MoveCount;
-        _playerXSymbol = gameState.PlayerXSymbol;
-        _playerOSymbol = gameState.PlayerOSymbol;
     }
 
-    public TicTacTwoBrain(GameConfiguration gameConfiguration, string playerX, string playerO, EGamePiece startingPlayer, string playerXSymbol, string playerOSymbol)
+    public TicTacTwoBrain(GameConfiguration gameConfiguration, EGamePiece startingPlayer)
     {
         _gameConfiguration = gameConfiguration;
-        _playerX = playerX;
-        _playerO = playerO;
         _nextMoveBy = startingPlayer;
         MoveCount = 0;
-        _playerXSymbol = playerXSymbol;
-        _playerOSymbol = playerOSymbol;
 
         _gameBoard = new EGamePiece[gameConfiguration.BoardSizeWidth][];
         for (var x = 0; x < _gameBoard.Length; x++)
@@ -82,13 +68,9 @@ public class TicTacTwoBrain
         return new GameState(GameBoard, _gameConfiguration)
         {
             NextMoveBy = _nextMoveBy,
-            PlayerX = _playerX,
-            PlayerO = _playerO,
             MoveCount = MoveCount,
             GridPositionX = _gridPosition.x,
             GridPositionY = _gridPosition.y,
-            PlayerOSymbol = _playerXSymbol,
-            PlayerXSymbol = _playerOSymbol
         };
     }
     public string GetGameStateJson()
@@ -100,7 +82,21 @@ public class TicTacTwoBrain
     {
         return _gameState.GameConfiguration.Name;
     }
-
+    public static bool MoveGrid(TicTacTwoBrain gameInstance, string direction)
+    {
+        return direction switch
+        {
+            "up" => gameInstance.CanMoveGrid(0, -1),
+            "down" => gameInstance.CanMoveGrid(0, 1),
+            "left" => gameInstance.CanMoveGrid(-1, 0),
+            "right" => gameInstance.CanMoveGrid(1, 0),
+            "up-left" => gameInstance.CanMoveGrid(-1, -1),
+            "up-right" => gameInstance.CanMoveGrid(1, -1),
+            "down-left" => gameInstance.CanMoveGrid(-1, 1),
+            "down-right" => gameInstance.CanMoveGrid(1, 1),
+            _ => false
+        };
+    }
     public bool CanMoveGrid(int directionX, int directionY)
     {
         int targetX = _gridPosition.x + directionX;
@@ -112,14 +108,9 @@ public class TicTacTwoBrain
             return true;
         }
         
-        Console.WriteLine("Cannot move grid in this direction. Choose the other move");
         return false;
     }
-
-    public string GetCurrentPlayer()
-    {
-        return _nextMoveBy == EGamePiece.X ? _playerX : _playerO;
-    }
+    
     private (int x, int y) GetGridCenter()
     {
         int startX = (DimX - GridWidth) / 2;
@@ -153,6 +144,7 @@ public class TicTacTwoBrain
             return true;
         }
         
+
         _nextMoveBy = _nextMoveBy == EGamePiece.X ? EGamePiece.O : EGamePiece.X;
 
         MoveCount++;
@@ -228,6 +220,27 @@ public class TicTacTwoBrain
 
         return count;
     }
+    
+    public static bool IsWithinBounds(TicTacTwoBrain gameInstance, int x, int y)
+    {
+        int boardWidth = gameInstance.BoardWidth;
+        int boardHeight = gameInstance.BoardWidth;
+
+        return x >= 0 && x < boardWidth && y >= 0 && y < boardHeight;
+    }
+    
+    public static bool IsWithinBoundsGrid(TicTacTwoBrain gameInstance, int x, int y)
+    {
+        var gridPosition = gameInstance.GridPosition;
+
+        int gridLeft = gridPosition.x;
+        int gridTop = gridPosition.y;
+        int gridRight = gridLeft + gameInstance.GridWidth;
+        int gridBottom = gridTop + gameInstance.GridHeight;
+        // Console.WriteLine($"Grid bounds: Left={gridLeft}, Right={gridRight}, Top={gridTop}, Bottom={gridBottom}");
+        return x >= gridLeft && x < gridRight && y >= gridTop && y < gridBottom;
+    }
+    
     
     public void ResetGame()
     {

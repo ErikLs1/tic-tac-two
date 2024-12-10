@@ -25,38 +25,12 @@ public class GameHelpers
         Console.WriteLine("\x1b[1m\x1b[36m====================\x1b[0m\x1b[0m");
         Console.WriteLine(title);
     }
-
-    private static string PromptForNonDuplicateName(string message)
-    {
-        Console.Write(message);
-        return Console.ReadLine()?.Trim() ?? "Player";
-    }
-
-    public static (string, string) GetUsersNames()
-    {
-        DisplayHeader("");
-        
-        string player1 = PromptForNonDuplicateName("Enter 1st Player's name: ");
-        string player2;
-
-        do
-        {
-            player2 = PromptForNonDuplicateName("Enter 2nd Player's name: ");
-            if (player2 != player1) break;
-            
-            Console.WriteLine("The 2nd player's name must be different from the 1st player's name. Please enter a different name.");
-        } while (true);
-        
-        Console.Clear();
-        return (player1, player2);
-    }
     
-    
-    public static EGamePiece GetStartingPlayer(string playerX, string playerO) 
+    public static EGamePiece GetStartingPlayer() 
     {
             DisplayHeader("Who will start the game?");
-            Console.WriteLine($"    1. {playerX}");
-            Console.WriteLine($"    2. {playerO}");
+            Console.WriteLine("    1. X");
+            Console.WriteLine("    2. O");
             
             do
             {
@@ -69,46 +43,6 @@ public class GameHelpers
                 Console.WriteLine("Invalid choice! Please enter '1' for the first player or '2' for the second player.");
 
             } while (true);
-    }
-
-    public static (string, string) GetPlayersSymbol(string playerX, string playerO)
-    {
-        DisplayHeader("");
-        string symbolX = PromptForSymbol($"{playerX} (default is 'X')", "X");
-        string symbolO;
-
-        do
-        {
-            symbolO = PromptForSymbol($"{playerO} (default is 'O')", "O");
-            if (symbolO != symbolX) break;
-            
-            Console.WriteLine("The symbols for each player must be different.");
-
-        } while (true);
-
-        return (symbolX, symbolO);
-    }
-
-    private static string PromptForSymbol(string player, string defaultSymbol)
-    {
-        string symbol;
-        do
-        {
-            Console.Write($"Enter the symbol for {player}: ");
-            symbol = Console.ReadLine()?.Trim()!;
-
-            if (string.IsNullOrEmpty(symbol))
-            {
-                return defaultSymbol;
-            }
-
-            if (symbol.Length is 1 or 2)
-            {
-                return symbol;
-            }
-
-            Console.WriteLine("Wrong input. Only one character is allowed.");
-        } while (true);
     }
     
     public static GameConfiguration SelectConfiguration()
@@ -197,7 +131,7 @@ public class GameHelpers
         {
             Console.Clear();
             DisplayHeader("We have a winner!");
-            Console.WriteLine($"{gameInstance.GetCurrentPlayer()} has won the game! \ud83e\udd73\ud83e\udd73\ud83e\udd73\ud83e\udd73 ");
+            Console.WriteLine($"{gameInstance._nextMoveBy} has won the game! \ud83e\udd73\ud83e\udd73\ud83e\udd73\ud83e\udd73 ");
             Console.WriteLine();
             ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
             Environment.Exit(0);
@@ -213,7 +147,7 @@ public class GameHelpers
         {
             Console.Write("Enter your move (up, down, left, right, up-left, up-right, down-left, down-right): ");
             move = Console.ReadLine()?.ToLower()!;
-            isValidMove = MoveGrid(gameInstance, move);
+            isValidMove = TicTacTwoBrain.MoveGrid(gameInstance, move);
             if (!isValidMove)
             {
                 Console.WriteLine("Wrong input.Please try again.");
@@ -223,25 +157,10 @@ public class GameHelpers
         gameInstance. _nextMoveBy = gameInstance._nextMoveBy == EGamePiece.X ? EGamePiece.O : EGamePiece.X;
     }
     
-    private static bool MoveGrid(TicTacTwoBrain gameInstance, string direction)
-    {
-        return direction switch
-        {
-            "up" => gameInstance.CanMoveGrid(0, -1),
-            "down" => gameInstance.CanMoveGrid(0, 1),
-            "left" => gameInstance.CanMoveGrid(-1, 0),
-            "right" => gameInstance.CanMoveGrid(1, 0),
-            "up-left" => gameInstance.CanMoveGrid(-1, -1),
-            "up-right" => gameInstance.CanMoveGrid(1, -1),
-            "down-left" => gameInstance.CanMoveGrid(-1, 1),
-            "down-right" => gameInstance.CanMoveGrid(1, 1),
-            _ => false
-        };
-    }
 
     private static (int, int) InsertCoordinates(TicTacTwoBrain gameInstance)
     {
-        Console.WriteLine($"{gameInstance.GetCurrentPlayer()}'s turn to make a move");
+        Console.WriteLine($"{gameInstance._nextMoveBy}'s turn to make a move");
         Console.Write("Give me coordinates <\x1b[1m\x1b[31mX\x1b[0m\x1b[0m,\x1b[1m\x1b[32mY\x1b[0m\x1b[0m> or save:");
     
        
@@ -254,7 +173,7 @@ public class GameHelpers
             }
             
             if (ParseCoordinates(input, out var x, out var y)
-                && IsWithinBounds(gameInstance, x, y)
+                && TicTacTwoBrain.IsWithinBounds(gameInstance, x, y)
                 && gameInstance.GetPiece(x, y) == EGamePiece.Empty)
             {
                 return (x, y);
@@ -288,25 +207,7 @@ public class GameHelpers
                parts.Length == 2 && int.TryParse(parts[0], out x) && 
                int.TryParse(parts[1], out y);
     }
-
-    private static bool IsWithinBounds(TicTacTwoBrain gameInstance, int x, int y)
-    {
-        int boardWidth = gameInstance.BoardWidth;
-        int boardHeight = gameInstance.BoardWidth;
-
-        return x >= 0 && x < boardWidth && y >= 0 && y < boardHeight;
-    }
-    private static bool IsWithinBoundsGrid(TicTacTwoBrain gameInstance, int x, int y)
-    {
-        var gridPosition = gameInstance.GridPosition;
-
-        int gridLeft = gridPosition.x;
-        int gridTop = gridPosition.y;
-        int gridRight = gridLeft + gameInstance.GridWidth;
-        int gridBottom = gridTop + gameInstance.GridHeight;
-        // Console.WriteLine($"Grid bounds: Left={gridLeft}, Right={gridRight}, Top={gridTop}, Bottom={gridBottom}");
-        return x >= gridLeft && x < gridRight && y >= gridTop && y < gridBottom;
-    }
+    
     
     private static void MovePiece(TicTacTwoBrain gameInstance, EGamePiece gamePiece)
     {
@@ -323,7 +224,7 @@ public class GameHelpers
                 Console.WriteLine("Wrong input. PLease, make sure coordinates are in the correct format.");
                 continue;
             }
-            if (!IsWithinBoundsGrid(gameInstance, startX, startY))
+            if (!TicTacTwoBrain.IsWithinBoundsGrid(gameInstance, startX, startY))
             {
                 Console.WriteLine("The selected piece is outside the grid. Please choose a piece within the grid.");
                 continue;
@@ -346,7 +247,7 @@ public class GameHelpers
                 continue;
             }
             
-            if (!IsWithinBoundsGrid(gameInstance, targetX, targetY))
+            if (!TicTacTwoBrain.IsWithinBoundsGrid(gameInstance, targetX, targetY))
             {
                 Console.WriteLine("The piece can only be moved within the grid. Please choose another position.");
                 continue;

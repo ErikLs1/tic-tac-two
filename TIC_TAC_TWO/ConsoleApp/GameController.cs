@@ -12,11 +12,8 @@ public class GameController
         GameHelpers.InitializeRepositories(configRepository, gameRepository);
         
         var chosenConfig = GameHelpers.SelectConfiguration();
-        var (playerX, playerO) = GameHelpers.GetUsersNames();
-        var (symbolX, symbolO) = GameHelpers.GetPlayersSymbol(playerX, playerO);
-        Visualizer.SetPlayersSymbols(symbolX, symbolO);
-        EGamePiece startingPlayer = GameHelpers.GetStartingPlayer(playerX, playerO);
-        var gameInstance = new TicTacTwoBrain(chosenConfig, playerX, playerO, startingPlayer, symbolX, symbolO);
+        EGamePiece startingPlayer = GameHelpers.GetStartingPlayer();
+        var gameInstance = new TicTacTwoBrain(chosenConfig, startingPlayer);
 
         while (true)
         {
@@ -42,8 +39,6 @@ public class GameController
         GameHelpers.InitializeRepositories(configRepository, gameRepository);
 
         var gameInstance = new TicTacTwoBrain(gameState);
-
-        Visualizer.SetPlayersSymbols(gameState.PlayerXSymbol, gameState.PlayerOSymbol);
         
         while (true)
         {

@@ -38,10 +38,6 @@ public class GameRepositoryDb : IGameRepository
             CreatedAt = timeStamp,
             ConfigurationId = config.Id,
             SaveName = saveNameWithTimestamp,
-            PlayerXName = gameState.PlayerX,
-            PlayerXSymbol = gameState.PlayerXSymbol,
-            PlayerOName = gameState.PlayerO,
-            PlayerOSymbol = gameState.PlayerOSymbol,
             NextMoveBy = (int) gameState.NextMoveBy,
             MoveCount = gameState.MoveCount,
             GridPositionX = gameState.GridPositionX,
@@ -81,11 +77,6 @@ public class GameRepositoryDb : IGameRepository
         var gameState = new GameState(gameBoard, gameConfiguration)
         {
             NextMoveBy = (EGamePiece)game.NextMoveBy,
-            
-            PlayerX = game.PlayerXName,
-            PlayerO = game.PlayerOName,
-            PlayerXSymbol = game.PlayerXSymbol,
-            PlayerOSymbol = game.PlayerOSymbol,
             MoveCount = game.MoveCount,
             GridPositionX = game.GridPositionX,
             GridPositionY = game.GridPositionY,
