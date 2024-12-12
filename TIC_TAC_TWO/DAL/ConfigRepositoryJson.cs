@@ -1,27 +1,52 @@
+using System.Text.Json;
 using GameBrain;
 
 namespace DAL;
 
 public class ConfigRepositoryJson : IConfigRepository
 {
-    public List<string> GetConfigurationNames()
+    public List<(int Id, string Name)> GetConfigurationNames()
     {
         CheckAndCreateInitialConfig();
 
-        return Directory
+        var configFiles = Directory
             .GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension)
-            .Select(fullFileName =>
-                Path.GetFileNameWithoutExtension(
-                    Path.GetFileNameWithoutExtension(fullFileName)
-                )
-            )
+            .OrderBy(f => f) 
             .ToList();
+        
+        var configurationNames = configFiles
+            .Select((fullFileName, index) => 
+            (
+                Id: index + 1, // Assign sequential IDs starting from 1
+                Name: Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(fullFileName))
+            ))
+            .ToList();
+        
+        return configurationNames;
     }
 
-    public GameConfiguration GetConfigurationByName(string name)
+    public GameConfiguration GetConfigurationById(int id)
     {
-        var configJsonStr = File.ReadAllText(FileHelper.BasePath + name + FileHelper.ConfigExtension);
-        var config = System.Text.Json.JsonSerializer.Deserialize<GameConfiguration>(configJsonStr);
+        var configFiles = Directory
+            .GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension)
+            .OrderBy(f => f)
+            .ToList();
+
+        if (id < 1 || id > configFiles.Count)
+        {
+            throw new Exception($"Configuration with ID {id} does not exist.");
+        }
+
+        var selectedFile = configFiles[id - 1]; // IDs start at 1
+
+        var configJsonStr = File.ReadAllText(selectedFile);
+        var config = JsonSerializer.Deserialize<GameConfiguration>(configJsonStr);
+
+        if (config == null)
+        {
+            throw new Exception($"Failed to deserialize configuration from file: {selectedFile}");
+        }
+
         return config;
     }
 

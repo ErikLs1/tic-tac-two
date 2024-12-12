@@ -4,26 +4,28 @@ namespace DAL;
 
 public class ConfigRepositoryDb : IConfigRepository
 {
-    public List<string> GetConfigurationNames()
+    public List<(int Id, string Name)> GetConfigurationNames()
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
-        return context.Configurations
-            .Select(c => c.Name)
+        var configList = context.Configurations
+            .Select(c => new { c.Id, c.Name })
+            .ToList(); 
+
+        return configList
+            .Select(c => (c.Id, c.Name))
             .ToList();
-        
-        //throw new NotImplementedException();
     }
 
-    public GameConfiguration GetConfigurationByName(string name)
+    public GameConfiguration GetConfigurationById(int id)
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
 
         var config = context.Configurations
-            .FirstOrDefault(c => c.Name == name);
+            .FirstOrDefault(c => c.Id == id);
 
         if (config == null)
         {
-            throw new Exception("Configuration not found");
+            throw new Exception($"Configuration with ID {id} not found.");
         }
 
         return new GameConfiguration
@@ -36,7 +38,6 @@ public class ConfigRepositoryDb : IConfigRepository
             WinCondition = config.WinCondition,
             MovePieceAfterNMoves = config.MovePieceAfterNMoves
         };
-        //throw new NotImplementedException();
     }
 
     public void SaveConfiguration(GameConfiguration gameConfig)
