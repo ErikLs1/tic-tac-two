@@ -1,14 +1,15 @@
 using DAL;
+using GameBrain;
 using MenySystem;
 
 namespace ConsoleApp;
 
 public static class Menus
 {
-    // private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryJson();
-    // private static readonly IGameRepository GameRepository = new GameRepositoryJson();
-    private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryDb();
-    private static readonly IGameRepository GameRepository = new GameRepositoryDb();
+    private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryJson();
+    private static readonly IGameRepository GameRepository = new GameRepositoryJson();
+    // private static readonly IConfigRepository ConfigRepository = new ConfigRepositoryDb();
+    // private static readonly IGameRepository GameRepository = new GameRepositoryDb();
     
     public static Menu MainMenu = new Menu(
         EMenuLevel.Main,
@@ -65,7 +66,7 @@ public static class Menus
 
         foreach (var savedGame in savedGameNames)
         {
-            var displayName = Path.GetFileNameWithoutExtension(savedGame);
+            var displayName = savedGame.GameConfiguration.Name; 
             var menuItem = new MenuItem()
             {
                 Shortcut = index.ToString(),
@@ -95,7 +96,7 @@ public static class Menus
         return savedGamesMenu.Run();
     }
 
-    public static string SavedGameOptionsMenu(string savedGameName)
+    public static string SavedGameOptionsMenu(GameState savedGame)
     {
         var menuItems = new List<MenuItem>()
         {
@@ -105,8 +106,8 @@ public static class Menus
                 Title = "Load Game",
                 MenuItemAction = () =>
                 {
-                    var gameState = GameRepository.LoadGame(savedGameName);
-                    GameController.MainLoopWithLoadedGame(gameState, ConfigRepository, GameRepository);
+                    // var gameState = GameRepository.LoadGame(savedGameName);
+                    GameController.MainLoopWithLoadedGame(savedGame, ConfigRepository, GameRepository);
                     return "";
                 }
             },
@@ -117,9 +118,15 @@ public static class Menus
                 Title = "Delete Game",
                 MenuItemAction = () =>
                 {
-                    GameRepository.DeleteGame(savedGameName);
-                    Console.WriteLine("Game deleted.");
-                    // Console.WriteLine(FileHelper.BasePath + savedGameName);
+                    if (savedGame.GameId.HasValue)
+                    {
+                        GameRepository.DeleteGame(savedGame.GameId.Value);
+                        Console.WriteLine("Game deleted.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid Game ID.");
+                    }
                     Console.WriteLine("Press any key to return back.");
                     Console.ReadKey();
                     return LoadSavedGamesMenu();
@@ -143,7 +150,7 @@ public static class Menus
 
         var savedGamesOptionsMenu = new Menu(
             EMenuLevel.Secondary,
-            "\x1b[1m\x1b[35mSaved Games\x1b[0m\x1b[0m" + $"\x1b[1m\x1b[35m - {savedGameName}\x1b[0m\x1b[0m",
+            "\x1b[1m\x1b[35mSaved Games\x1b[0m\x1b[0m",
             menuItems
         );
         return savedGamesOptionsMenu.Run();

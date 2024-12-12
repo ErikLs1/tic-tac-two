@@ -2,6 +2,7 @@ namespace GameBrain;
 
 public class GameState
 {
+    public int? GameId { get; set; } = null;
     public EGamePiece[][] GameBoard { get; set; }
     public EGamePiece NextMoveBy { get; set; } = EGamePiece.X;
 

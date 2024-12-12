@@ -25,16 +25,16 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="Pages\Configurations\Create.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Configurations\Delete.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Configurations\Details.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Configurations\Edit.cshtml" />
-      <_ContentIncludedByDefault Remove="Pages\Configurations\Index.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\Games\Create.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\Games\Delete.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\Games\Details.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\Games\Edit.cshtml" />
       <_ContentIncludedByDefault Remove="Pages\Games\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Configurations\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Configurations\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Configurations\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Configurations\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Configurations\Index.cshtml" />
     </ItemGroup>
 
 </Project>

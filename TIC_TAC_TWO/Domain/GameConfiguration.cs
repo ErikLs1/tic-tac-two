@@ -6,9 +6,6 @@ public class GameConfiguration
 {
     // Primary Key
     public int Id { get; set; }
-    
-    public int GameId { get; set; }
-    public Game Game { get; set; } = default!;
 
     [MaxLength(128)]
     public string Name { get; set; } = default!;
@@ -20,4 +17,5 @@ public class GameConfiguration
     public int WinCondition { get; set; }
     public int MovePieceAfterNMoves { get; set; }
     
+    public ICollection<Game>? Games { get; set; }
 }

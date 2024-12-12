@@ -1,58 +1,49 @@
-using System.Runtime.InteropServices.JavaScript;
 using DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using NuGet.Packaging.Signing;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp.Pages;
 
 public class IndexModel : PageModel
+
 {
     private readonly ILogger<IndexModel> _logger;
-
-    public IndexModel(ILogger<IndexModel> logger)
+    private readonly IConfigRepository _configRepository;
+    
+    public IndexModel(ILogger<IndexModel> logger, IConfigRepository configRepository)
     {
         _logger = logger;
+        _configRepository = configRepository;
     }
     
-    [BindProperty(SupportsGet = true)]
-    public string? Error { get; set; }
+    public SelectList ConfigSelectList { get; set; } = default!;
 
-    [BindProperty]
-    public string? UserName { get; set; }
-    
-    [BindProperty]
-    public string? Password { get; set; }
-    
-    [BindProperty]
-    public bool IsAdmin { get; set; }
-    
-    public void OnGet()
+    [BindProperty] 
+    public int ConfigId { get; set; }
+
+    public IActionResult OnGet()
     {
+        var selectListData = _configRepository.GetConfigurationNames()
+            .Select(name => new {id = name, value = name})
+            .ToList();
+        
+        ConfigSelectList = new SelectList(selectListData, "id", "value");
+        
+        return Page();
     }
-    
+
     public IActionResult OnPost()
     {
-        UserName = UserName?.Trim();
-        Password = Password?.Trim();
-        
-        if (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password))
+        if (!ModelState.IsValid)
         {
-            using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
-            var user = context.Users.FirstOrDefault(u => u.Username == UserName && u.Password == Password);
-
-            if (user == null)
-            {
-                Error = "Wrong username or password";
-                return Page();
-            }
-
-            IsAdmin = user.Username == "admin" && user.Password == "admin123";
-            return RedirectToPage("./Home", new {userName = UserName, isAdmin = IsAdmin});
+            var selectListData = _configRepository.GetConfigurationNames()
+                .Select(name => new {id = name, value = name})
+                .ToList();
+        
+            ConfigSelectList = new SelectList(selectListData, "id", "value");
         }
-
-        Error = "Wrong username or password";
-
-        return Page();
+        
+        return RedirectToPage("./PlayGame", new { ConfigId = ConfigId });
     }
 }

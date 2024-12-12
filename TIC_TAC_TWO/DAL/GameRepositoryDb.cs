@@ -12,49 +12,85 @@ public class GameRepositoryDb : IGameRepository
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
 
-        var config = context.Configurations.FirstOrDefault(c => c.Name == gameState.GameConfiguration.Name);
-        
-        if (config == null)
+        // Log the GameId before attempting to find the existing game
+        Console.WriteLine($"Attempting to save GameState with GameId: {gameState.GameId}");
+
+        Game? existingGame = null;
+
+        if (gameState.GameId.HasValue)
         {
-            config = new GameConfiguration()
-            {
-                Name = gameState.GameConfiguration.Name,
-                BoardSizeWidth = gameState.GameConfiguration.BoardSizeWidth,
-                BoardSizeHeight = gameState.GameConfiguration.BoardSizeHeight,
-                GridWidth = gameState.GameConfiguration.GridWidth,
-                GridHeight = gameState.GameConfiguration.GridHeight,
-                WinCondition = gameState.GameConfiguration.WinCondition,
-                MovePieceAfterNMoves = gameState.GameConfiguration.MovePieceAfterNMoves
-            };
-            context.Configurations.Add(config);
-            context.SaveChanges();
+            existingGame = context.Games.Include(g => g.Configuration)
+                .FirstOrDefault(g => g.Id == gameState.GameId.Value);
+
+            Console.WriteLine(existingGame != null
+                ? $"Found existing game with ID {gameState.GameId.Value}"
+                : $"No existing game found with ID {gameState.GameId.Value}");
         }
 
-        var timeStamp = DateTime.Now;
-        var saveNameWithTimestamp = $"{gameConfigName}_{timeStamp:yyyy-MM-dd_HH-mm-ss}";
-        
-        var game = new Game()
+        if (existingGame != null)
         {
-            CreatedAt = timeStamp,
-            ConfigurationId = config.Id,
-            SaveName = saveNameWithTimestamp,
-            NextMoveBy = (int) gameState.NextMoveBy,
-            MoveCount = gameState.MoveCount,
-            GridPositionX = gameState.GridPositionX,
-            GridPositionY = gameState.GridPositionY,
-            GameBoardSerialized = JsonSerializer.Serialize(gameState.GameBoard)
-        };
+            existingGame.SaveName = gameConfigName;
+            existingGame.NextMoveBy = (int)gameState.NextMoveBy;
+            existingGame.MoveCount = gameState.MoveCount;
+            existingGame.GridPositionX = gameState.GridPositionX;
+            existingGame.GridPositionY = gameState.GridPositionY;
+            existingGame.GameBoardSerialized = JsonSerializer.Serialize(gameState.GameBoard);
 
-        context.Games.Add(game);
+            context.Games.Update(existingGame);
+            Console.WriteLine($"Updated existing game with ID {existingGame.Id}");
+        }
+        else
+        {
+            Console.WriteLine("Creating a new game record.");
+
+            var config = context.Configurations.FirstOrDefault(c => c.Name == gameConfigName);
+            if (config == null)
+            {
+                config = new GameConfiguration()
+                {
+                    Name = gameState.GameConfiguration.Name,
+                    BoardSizeWidth = gameState.GameConfiguration.BoardSizeWidth,
+                    BoardSizeHeight = gameState.GameConfiguration.BoardSizeHeight,
+                    GridWidth = gameState.GameConfiguration.GridWidth,
+                    GridHeight = gameState.GameConfiguration.GridHeight,
+                    WinCondition = gameState.GameConfiguration.WinCondition,
+                    MovePieceAfterNMoves = gameState.GameConfiguration.MovePieceAfterNMoves
+                };
+                context.Configurations.Add(config);
+                context.SaveChanges();
+                Console.WriteLine($"Created new GameConfiguration with Name: {gameConfigName}");
+            }
+
+            var newGame = new Game()
+            {
+                CreatedAt = DateTime.Now,
+                ConfigurationId = config.Id,
+                SaveName = gameConfigName,
+                NextMoveBy = (int)gameState.NextMoveBy,
+                MoveCount = gameState.MoveCount,
+                GridPositionX = gameState.GridPositionX,
+                GridPositionY = gameState.GridPositionY,
+                GameBoardSerialized = JsonSerializer.Serialize(gameState.GameBoard)
+            };
+
+            context.Games.Add(newGame);
+            context.SaveChanges();
+
+            gameState.GameId = newGame.Id;
+            Console.WriteLine($"Created new game with ID {newGame.Id}");
+        }
+
         context.SaveChanges();
+
+        Console.WriteLine($"Game saved successfully with GameId {gameState.GameId}");
     }
 
-    public GameState LoadGame(string gameConfigName)
+    public GameState LoadGame(int gameId)
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
         var game = context.Games
             .Include(g => g.Configuration)
-            .FirstOrDefault(g => g.SaveName == gameConfigName);
+            .FirstOrDefault(g => g.Id == gameId);
 
         if (game == null)
         {
@@ -65,7 +101,7 @@ public class GameRepositoryDb : IGameRepository
 
         var gameConfiguration = new GameBrain.GameConfiguration
         {
-            Name = game.Configuration.Name,
+            Name = game.SaveName, // Change if needed
             BoardSizeWidth = game.Configuration.BoardSizeWidth,
             BoardSizeHeight = game.Configuration.BoardSizeHeight,
             GridWidth = game.Configuration.GridWidth,
@@ -73,36 +109,67 @@ public class GameRepositoryDb : IGameRepository
             WinCondition = game.Configuration.WinCondition,
             MovePieceAfterNMoves = game.Configuration.MovePieceAfterNMoves
         };
-        
+
         var gameState = new GameState(gameBoard, gameConfiguration)
         {
+            GameId = game.Id,
             NextMoveBy = (EGamePiece)game.NextMoveBy,
             MoveCount = game.MoveCount,
             GridPositionX = game.GridPositionX,
             GridPositionY = game.GridPositionY,
         };
-        
-        
+
+
         return gameState;
     }
 
-    public List<string> GetSavedGames()
+    public List<GameState> GetSavedGames()
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
-        return context.Games
-            .OrderByDescending(g => g.CreatedAt)
-            .Select(g => g.SaveName)
-            .ToList();
+        var games = context.Games.Include(g => g.Configuration).ToList();
+
+        var gameStates = games.Select(game =>
+        {
+            var gameBoard = JsonSerializer.Deserialize<EGamePiece[][]>(game.GameBoardSerialized)
+                            ?? throw new Exception("Failed to deserialize game board");
+
+            var gameConfiguration = new GameBrain.GameConfiguration
+            {
+                Name = game.SaveName,
+                BoardSizeWidth = game.Configuration.BoardSizeWidth,
+                BoardSizeHeight = game.Configuration.BoardSizeHeight,
+                GridWidth = game.Configuration.GridWidth,
+                GridHeight = game.Configuration.GridHeight,
+                WinCondition = game.Configuration.WinCondition,
+                MovePieceAfterNMoves = game.Configuration.MovePieceAfterNMoves
+            };
+
+            return new GameState(gameBoard, gameConfiguration)
+            {
+                GameId = game.Id,
+                NextMoveBy = (EGamePiece)game.NextMoveBy,
+                MoveCount = game.MoveCount,
+                GridPositionX = game.GridPositionX,
+                GridPositionY = game.GridPositionY
+            };
+        }).OrderByDescending(gs => gs.GameId).ToList();
+
+        return gameStates;
     }
 
-    public void DeleteGame(string gameName)
+    public void DeleteGame(int gameId)
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
-        var game = context.Games.FirstOrDefault(g => g.SaveName == gameName);
+        var game = context.Games.FirstOrDefault(g => g.Id == gameId);
         if (game != null)
         {
             context.Games.Remove(game);
             context.SaveChanges();
+            Console.WriteLine($"Game with ID {gameId} deleted successfully.");
+        }
+        else
+        {
+            Console.WriteLine($"Game with ID {gameId} not found.");
         }
     }
 }
