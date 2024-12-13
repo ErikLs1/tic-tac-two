@@ -1,25 +1,33 @@
 ﻿@page
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    Layout = "Shared/_Layout";
 }
 
-<div class="container full-height d-flex flex-column justify-content-center">
-    <h1 class="text-center mb-4">New Game</h1>
+<div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm">
+        <!-- Reduced column size from col-md-6 to col-md-4 for a smaller form -->
+        <div class="col-md-4">
+            <div class="card shadow-sm" style="max-width: 400px;">
+                <div class="card-header bg-dark text-white">
+                    <h2 class="mb-0">Create New Game</h2>
+                </div>
                 <div class="card-body">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
+                        
                         <div class="mb-3">
-                            <label asp-for="ConfigId" class="form-label"></label>
-                            <select asp-for="ConfigId" class="form-select" asp-items="Model.ConfigSelectList"></select>
+                            <label asp-for="ConfigId" class="form-label">Configurations</label>
+                            <select asp-for="ConfigId" class="form-select" asp-items="Model.ConfigSelectList">
+                                <option value="">-- Select Configuration --</option>
+                            </select>
+                            <span asp-validation-for="ConfigId" class="text-danger"></span>
                         </div>
-
+        
                         <div class="d-grid">
-                            <input type="submit" value="Create" class="btn btn-primary btn-block"/>
+                            <button type="submit" class="btn btn-dark">Create</button>
                         </div>
                     </form>
                 </div>
@@ -27,5 +35,3 @@
         </div>
     </div>
 </div>
-
-
