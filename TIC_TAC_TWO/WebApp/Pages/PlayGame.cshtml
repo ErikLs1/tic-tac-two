@@ -5,7 +5,7 @@
 @{
 Layout = "Shared/_Layout";
 var boardWidth = Model.TicTacTwoBrain.BoardWidth;
-var boardHeight = Model.TicTacTwoBrain.BoardHeight; // Corrected from GridHeight
+var boardHeight = Model.TicTacTwoBrain.BoardHeight; 
 }
 
 <div class="container mt-5 d-flex flex-column align-items-center">
@@ -36,38 +36,96 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight; // Corrected from GridHeight
     <div class="game-board">
         @for (int y = 0; y < boardHeight; y++)
         {
-        <div class="row">
-            @for (int x = 0; x < boardWidth; x++)
-            {
-            // Determine if the cell is inside the grid area
-            bool isInGridArea = y >= @Model.TicTacTwoBrain.GridPosition.y &&
-            y < @Model.TicTacTwoBrain.GridPosition.y + @Model.TicTacTwoBrain.GridHeight &&
-            x >= @Model.TicTacTwoBrain.GridPosition.x &&
-            x < @Model.TicTacTwoBrain.GridPosition.x + @Model.TicTacTwoBrain.GridWidth;
+            <div class="row">
+                @for (int x = 0; x < boardWidth; x++)
+                {
+                    // Determine if the cell is inside the grid area
+                    bool isInGridArea = y >= @Model.TicTacTwoBrain.GridPosition.y &&
+                                        y < @Model.TicTacTwoBrain.GridPosition.y + @Model.TicTacTwoBrain.GridHeight &&
+                                        x >= @Model.TicTacTwoBrain.GridPosition.x &&
+                                        x < @Model.TicTacTwoBrain.GridPosition.x + @Model.TicTacTwoBrain.GridWidth;
 
-            var piece = Model.TicTacTwoBrain.GameBoard[x][y];
-            <div class="col p-1">
-                <form method="post" asp-page="./PlayGame" class="m-0">
-                    <input type="hidden" name="X" value="@x" />
-                    <input type="hidden" name="Y" value="@y" />
-                    <input type="hidden" name="GameId" value="@Model.GameId" />
-                    <button type="submit" class="btn cell-btn @(isInGridArea ? "grid-cell" : "")" disabled="@(piece != EGamePiece.Empty)">
-                        @if (piece == EGamePiece.X)
-                        {
-                        <span class="text-primary fw-bold">X</span>
-                        }
-                        else if (piece == EGamePiece.O)
-                        {
-                        <span class="text-success fw-bold">O</span>
-                        }
-                    </button>
-                </form>
+                    var piece = Model.TicTacTwoBrain.GameBoard[x][y];
+                    <div class="col p-1">
+                        <form method="post" asp-page="./PlayGame" class="m-0">
+                            <input type="hidden" name="X" value="@x" />
+                            <input type="hidden" name="Y" value="@y" />
+                            <input type="hidden" name="GameId" value="@Model.GameId" />
+                            <button type="submit" class="btn cell-btn @(isInGridArea ? "grid-cell" : "")" disabled="@(piece != EGamePiece.Empty)">
+                                @if (piece == EGamePiece.X)
+                                {
+                                    <span class="text-primary fw-bold">X</span>
+                                }
+                                else if (piece == EGamePiece.O)
+                                {
+                                    <span class="text-success fw-bold">O</span>
+                                }
+                            </button>
+                        </form>
+                    </div>
+                }
             </div>
-            }
-        </div>
         }
     </div>
+    @if (Model.TicTacTwoBrain.MoveCount >= 4) // FIX LATER (MOVE PIECE AFTER N MOVES)
+    {
+        <div class="action-container mt-4">
+            <h3 class="text-center mb-3">Choose Action</h3>
+            <div class="d-flex justify-content-center gap-3">
+                <form method="post" asp-page="./PlayGame" class="m-0">
+                    <input type="hidden" name="Action" value="Make-a-Move"/>
+                    <input type="hidden" name="GameId" value="@Model.GameId"/>
+                    <button type="submit" class="btn btn-primary action-btn">Make a Move</button>
+                </form>
 
+                <form method="post" asp-page="./PlayGame" class="m-0">
+                    <input type="hidden" name="Action" value="Move-the-Grid"/>
+                    <input type="hidden" name="GameId" value="@Model.GameId"/>
+                    <button type="submit" class="btn btn-warning action-btn">Move the Grid</button>
+                </form>
+
+                <form method="post" asp-page="./PlayGame" class="m-0">
+                    <input type="hidden" name="Action" value="Move the Piece"/>
+                    <input type="hidden" name="GameId" value="@Model.GameId"/>
+                    <button type="submit" class="btn btn-success action-btn">Move the Piece</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    
+    @if (Model.IsActionInProgress && Model.Action == "Move-the-Grid")
+    {
+        <div class="direction-container mt-4">
+            <h3 class="text-center mb-2">Choose Direction</h3>
+            <div class="d-grid direction-grid">
+                <!-- Each direction is a separate form submission -->
+                @foreach (var direction in new[] { "Up-Left", "Up", "Up-Right", "Left", "Right", "Down-Left", "Down", "Down-Right" })
+                {
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move the Grid" />
+                        <input type="hidden" name="Direction" value="@direction" />
+                        <input type="hidden" name="GameId" value="@Model.GameId" />
+                        <button type="submit" class="btn btn-secondary direction-btn">@direction</button>
+                    </form>
+                }
+            </div>
+        </div>
+        @* <div class="direction-container mt-4"> *@
+        @*     <h3 class="text-center mb-2">Choose Direction</h3> *@
+        @*     <div class="d-grid direction-grid"> *@
+        @*         <button type="button" class="btn btn-secondary direction-btn">Up-Left</button> *@
+        @*         <button type="button" class="btn btn-secondary direction-btn">Up</button> *@
+        @*         <button type="button" class="btn btn-secondary direction-btn">Up-Right</button> *@
+        @*         <button type="button" class="btn btn-secondary direction-btn">Left</button> *@
+        @*         <div></div> *@
+        @*         <button type="button" class="btn btn-secondary direction-btn">Right</button> *@
+        @*         <button type="button" class="btn btn-secondary direction-btn">Down-Left</button> *@
+        @*         <button type="button" class="btn btn-secondary direction-btn">Down</button> *@
+        @*         <button type="button" class="btn btn-secondary direction-btn">Down-Right</button> *@
+        @*     </div> *@
+        @* </div> *@
+    }
 
     <!-- Reset Game Button -->
     <div class="mt-4 text-center">
@@ -75,8 +133,8 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight; // Corrected from GridHeight
     </div>
 </div>
 
-<!-- Bootstrap JS (Optional, for interactive components) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@* <!-- Bootstrap JS (Optional, for interactive components) --> *@
+@* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> *@
 
 <!-- Custom CSS -->
 <style>
@@ -131,5 +189,65 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight; // Corrected from GridHeight
         outline: none;
         box-shadow: 0 0 0 3px rgba(130, 138, 145, 0.5);
     }
+
+    /* Action Buttons Container */
+    .action-container {
+        padding: 20px;
+        border: 2px solid #343a40;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .action-btn {
+        width: 150px;
+        height: 50px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .action-btn:hover {
+        transform: scale(1.1);
+        background-color: #e2e6ea;
+    }
+
+    /* Direction Buttons Container */ 
+    /*BUTTONS*/
+    .direction-container {
+        padding: 20px;
+        border: 2px solid #343a40;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .direction-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3, 50px);
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .direction-btn {
+        width: 100px;
+        height: 50px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 5px;
+        transition: transform 0.2s, background-color 0.3s;
+        background-color: #e9ecef;
+    }
+
+    .direction-btn:hover {
+        transform: scale(1.1);
+        background-color: #d6d8db;
+    }
+
 
 </style>

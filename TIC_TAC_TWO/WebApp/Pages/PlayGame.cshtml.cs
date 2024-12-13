@@ -9,11 +9,12 @@ public class PlayGame : PageModel
 {
     private readonly IConfigRepository _configRepository;
     private readonly IGameRepository _gameRepository;
-
-    public PlayGame(IConfigRepository configRepository, IGameRepository gameRepository)
+    private readonly ILogger<PlayGame> _logger;
+    public PlayGame(IConfigRepository configRepository, IGameRepository gameRepository, ILogger<PlayGame> logger)
     {
         _configRepository = configRepository;
         _gameRepository = gameRepository;
+        _logger = logger;
     }
 
     [BindProperty(SupportsGet = true)] public int GameId { get; set; } = default!;
@@ -24,8 +25,16 @@ public class PlayGame : PageModel
 
     [BindProperty] public int X { get; set; } = default!;
 
+    [BindProperty] public string Action { get; set; } = string.Empty;
+    [BindProperty] public string Direction { get; set; } = string.Empty;
+
     public TicTacTwoBrain TicTacTwoBrain { get; set; } = default!;
     public string Message { get; set; } = string.Empty;
+    public bool IsGameOver { get; set; } = false;
+    private string Winner { get; set; } = string.Empty;
+    
+    [BindProperty]
+    public bool IsActionInProgress { get; set; } = false;
 
     public IActionResult OnGet()
     {
@@ -42,7 +51,6 @@ public class PlayGame : PageModel
             var gameState = TicTacTwoBrain.GetGameState();
             _gameRepository.SaveGame(gameState, TicTacTwoBrain.GetGameConfigName());
             GameId = (int)gameState.GameId!;
-
             return RedirectToPage("./PlayGame", new { GameId = GameId });
         }
         else
@@ -56,19 +64,72 @@ public class PlayGame : PageModel
     {
         var dbGame = _gameRepository.LoadGame(GameId);
         TicTacTwoBrain = new TicTacTwoBrain(dbGame);
-
-        bool moveResult = TicTacTwoBrain.MakeAMove(X, Y);
         
-        if (moveResult)
+        if (!string.IsNullOrEmpty(Action) && string.IsNullOrEmpty(Direction))
         {
-            _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(), TicTacTwoBrain.GetGameConfigName());
+            switch (Action)
+            {
+                
+                case "Make-a-Move":
+                    IsActionInProgress = true;
+                    return Page();
+                    // return RedirectToPage("./PlayGame", new {GameId,Action,Direction });
+                case "Move-the-Grid":
+                    IsActionInProgress = true;
+                    return Page();
+                case "Move the Piece":
+                    Message = "Move the Piece action is not yet implemented.";
+                    return Page();
+                default:
+                    TempData["Error"] = "Unknown action selected.";
+                    return RedirectToPage("./PlayGame", new { GameId = GameId });
+            }
+        } 
+        else if (!string.IsNullOrEmpty(Direction))
+        {
+            
+            bool moveSuccess = TicTacTwoBrain.MoveGrid(TicTacTwoBrain, Direction.ToLower());
+           
+            if (moveSuccess)
+            {
+                _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(),TicTacTwoBrain.GetGameConfigName());
+                Message = $"Grid moved {Direction} successfully.";
+            }
+            else
+            {
+                Message = $"Cannot move grid {Direction}. Please choose a different direction.";
+            }
             return RedirectToPage("./PlayGame", new { GameId = GameId });
         }
         else
         {
-            Message = "Invalid move.Please try again.";
+            // if (!string.IsNullOrEmpty(Action))
+            // {
+            //   
+            // } 
+            // else
+             if (dbGame.MoveCount >= dbGame.GameConfiguration.MovePieceAfterNMoves)
+            {
+                IsActionInProgress = true;
+                return Page();
+            }
+            else
+            {
+                bool moveResult = TicTacTwoBrain.MakeAMove(X, Y);
+                
+                if (moveResult)
+                {
+                    _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(), TicTacTwoBrain.GetGameConfigName());
+                    return RedirectToPage("./PlayGame", new { GameId = GameId });
+                }
+                else
+                {
+                    Message = "Invalid move.Please try again.";
+                }
+            }
+            
         }
-
+        
         return Page();
     }
 }
