@@ -51,6 +51,12 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight;
                             <input type="hidden" name="X" value="@x" />
                             <input type="hidden" name="Y" value="@y" />
                             <input type="hidden" name="GameId" value="@Model.GameId" />
+                            
+                            @if (Model.IsActionInProgress && Model.Action == "Make-a-Move")
+                            {
+                                <input type="hidden" name="Action" value="Make-a-Move" />
+                                <input type="hidden" name="IsActionInProgress" value="true" />
+                            }
                             <button type="submit" class="btn cell-btn @(isInGridArea ? "grid-cell" : "")" disabled="@(piece != EGamePiece.Empty)">
                                 @if (piece == EGamePiece.X)
                                 {
@@ -85,7 +91,7 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight;
                 </form>
 
                 <form method="post" asp-page="./PlayGame" class="m-0">
-                    <input type="hidden" name="Action" value="Move the Piece"/>
+                    <input type="hidden" name="Action" value="Move-the-Piece"/>
                     <input type="hidden" name="GameId" value="@Model.GameId"/>
                     <button type="submit" class="btn btn-success action-btn">Move the Piece</button>
                 </form>
@@ -103,7 +109,7 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight;
                 @foreach (var direction in new[] { "Up-Left", "Up", "Up-Right", "Left", "Right", "Down-Left", "Down", "Down-Right" })
                 {
                     <form method="post" asp-page="./PlayGame" class="m-0">
-                        <input type="hidden" name="Action" value="Move the Grid" />
+                        <input type="hidden" name="Action" value="Move-the-Grid" />
                         <input type="hidden" name="Direction" value="@direction" />
                         <input type="hidden" name="GameId" value="@Model.GameId" />
                         <button type="submit" class="btn btn-secondary direction-btn">@direction</button>
