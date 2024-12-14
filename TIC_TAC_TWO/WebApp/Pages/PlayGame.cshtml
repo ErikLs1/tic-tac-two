@@ -13,7 +13,7 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight;
     <div class="text-center mb-4">
         <h2>Play Tic-Tac-Toe</h2>
         <p><strong>Next move by:</strong> @Model.TicTacTwoBrain._nextMoveBy</p>
-        <p><strong>Configuration ID:</strong> @Model.ConfigId</p>
+        @* <p><strong>Configuration ID:</strong> @Model.ConfigId</p> *@
         <p><strong>Game ID:</strong> @Model.GameId</p>
     </div>
 
@@ -57,7 +57,20 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight;
                                 <input type="hidden" name="Action" value="Make-a-Move" />
                                 <input type="hidden" name="IsActionInProgress" value="true" />
                             }
-                            <button type="submit" class="btn cell-btn @(isInGridArea ? "grid-cell" : "")" disabled="@(piece != EGamePiece.Empty)">
+
+                            @if (Model.IsActionInProgress && Model.Action == "Move-the-Piece")
+                            {
+                            <input type="hidden" name="Action" value="Move-the-Piece" />
+                            <input type="hidden" name="IsActionInProgress" value="true" />
+                            
+                            @if (Model.SelectedPieceX.HasValue && Model.SelectedPieceY.HasValue)
+                            {
+                            <input type="hidden" name="SelectedPieceX" value="@Model.SelectedPieceX.Value" />
+                            <input type="hidden" name="SelectedPieceY" value="@Model.SelectedPieceY.Value" />
+                            }
+                            
+                            }
+                            <button type="submit" class="btn cell-btn @(isInGridArea ? "grid-cell" : "")">
                                 @if (piece == EGamePiece.X)
                                 {
                                     <span class="text-primary fw-bold">X</span>
@@ -73,7 +86,7 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight;
             </div>
         }
     </div>
-    @if (Model.TicTacTwoBrain.MoveCount >= 4) // FIX LATER (MOVE PIECE AFTER N MOVES)
+    @if (Model.TicTacTwoBrain.MoveCount >= 4 && !Model.IsActionInProgress) // FIX LATER (MOVE PIECE AFTER N MOVES)
     {
         <div class="action-container mt-4">
             <h3 class="text-center mb-3">Choose Action</h3>

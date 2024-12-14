@@ -26,15 +26,22 @@
         [BindProperty] public int X { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)] public string Action { get; set; } = string.Empty;
+        
         [BindProperty] public string Direction { get; set; } = string.Empty;
-
+        
+        [BindProperty(SupportsGet = true)]
+        public bool IsActionInProgress { get; set; } = false;
+        
+        [BindProperty(SupportsGet = true)]
+        public int? SelectedPieceX { get; set; } = default!;
+        
+        [BindProperty(SupportsGet = true)]
+        public int? SelectedPieceY { get; set; } = default!;
+        
         public TicTacTwoBrain TicTacTwoBrain { get; set; } = default!;
         public string Message { get; set; } = string.Empty;
         public bool IsGameOver { get; set; } = false;
         private string Winner { get; set; } = string.Empty;
-        
-        [BindProperty(SupportsGet = true)]
-        public bool IsActionInProgress { get; set; } = false;
 
         public IActionResult OnGet()
         {
@@ -83,6 +90,46 @@
                     Message = "Invalid move.Please try again.";
                     return Page();
                 }
+            }
+            // HANDLE PIECE MOVEMENT
+            else if (!string.IsNullOrEmpty(Action) && Action == "Move-the-Piece" && IsActionInProgress && string.IsNullOrEmpty(Direction))
+            {
+                if (SelectedPieceX == null || SelectedPieceY == null)
+                {
+                    var piece = TicTacTwoBrain.GetPiece(X, Y);
+                    if (piece == TicTacTwoBrain.GetCurrentPlayer() &&
+                        TicTacTwoBrain.IsWithinBoundsGrid(TicTacTwoBrain, X, Y))
+                    {
+                        SelectedPieceX = X;
+                        SelectedPieceY = Y;
+                        Message = "Piece selected. Now choose where to move it.";
+                        return Page();
+                    }
+                    else
+                    {
+                        Message = "Invalid piece. Choose another one.";
+                        return Page();
+                    }
+                }
+                else
+                {
+                    if (TicTacTwoBrain.IsWithinBoundsGrid(TicTacTwoBrain, X, Y) &&
+                        TicTacTwoBrain.GetPiece(X, Y) == EGamePiece.Empty)
+                    {
+                        TicTacTwoBrain.MoveAPiece(SelectedPieceX.Value, SelectedPieceY.Value, X, Y);
+                        _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(),TicTacTwoBrain.GetGameConfigName());
+                        Action = string.Empty;
+                        IsActionInProgress = false;
+                        SelectedPieceX = null;
+                        SelectedPieceY = null;
+                        return RedirectToPage("./PlayGame", new { GameId = GameId });
+                    }
+                    else
+                    {
+                        Message = "Invalid target cell. Choose another one";
+                        return Page();
+                    }
+                }
             } 
             // HANDLE GRID MOVEMENT
             else if (!string.IsNullOrEmpty(Direction))
@@ -110,12 +157,11 @@
                     case "Make-a-Move":
                         IsActionInProgress = true;
                         return Page();
-                        // return RedirectToPage("./PlayGame", new {GameId,Action,Direction });
                     case "Move-the-Grid":
                         IsActionInProgress = true;
                         return Page();
                     case "Move-the-Piece":
-                        Message = "Move the Piece action is not yet implemented.";
+                        IsActionInProgress = true;
                         return Page();
                     default:
                         TempData["Error"] = "Unknown action selected.";
