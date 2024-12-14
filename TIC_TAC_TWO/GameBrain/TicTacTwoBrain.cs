@@ -7,35 +7,38 @@ public class TicTacTwoBrain
     private EGamePiece[][] _gameBoard;
     public EGamePiece _nextMoveBy { get; set; } = EGamePiece.X;
 
-    private GameConfiguration _gameConfiguration;
+    private GameConfig _gameConfig;
     
     
     private (int x, int y) _gridPosition;
+    public int MovePieceAfterNMoves { get; set; }
     public int MoveCount { get; private set; }
 
     public TicTacTwoBrain (GameState gameState)
     {
         _gameState = gameState;
-        _gameConfiguration = gameState.GameConfiguration;
+        _gameConfig = gameState.GameConfig;
         _gameBoard = gameState.GameBoard;
         _nextMoveBy = gameState.NextMoveBy;
         _gridPosition = (gameState.GridPositionX, gameState.GridPositionY);
         MoveCount = gameState.MoveCount;
+        MovePieceAfterNMoves = _gameConfig.MovePieceAfterNMoves;
     }
 
-    public TicTacTwoBrain(GameConfiguration gameConfiguration, EGamePiece startingPlayer)
+    public TicTacTwoBrain(GameConfig gameConfig, EGamePiece startingPlayer)
     {
-        _gameConfiguration = gameConfiguration;
+        _gameConfig = gameConfig;
+        MovePieceAfterNMoves = gameConfig.MovePieceAfterNMoves;
         _nextMoveBy = startingPlayer;
         MoveCount = 0;
 
-        _gameBoard = new EGamePiece[gameConfiguration.BoardSizeWidth][];
+        _gameBoard = new EGamePiece[gameConfig.BoardSizeWidth][];
         for (var x = 0; x < _gameBoard.Length; x++)
         {
-            _gameBoard[x] = new EGamePiece[gameConfiguration.BoardSizeHeight];
+            _gameBoard[x] = new EGamePiece[gameConfig.BoardSizeHeight];
         }
 
-        _gameState = new GameState(_gameBoard, gameConfiguration)
+        _gameState = new GameState(_gameBoard, gameConfig)
         {
             NextMoveBy = startingPlayer
         };
@@ -66,7 +69,7 @@ public class TicTacTwoBrain
 
     public GameState GetGameState()
     {
-        return new GameState(GameBoard, _gameConfiguration)
+        return new GameState(GameBoard, _gameConfig)
         {
             GameId = _gameState.GameId,
             NextMoveBy = _nextMoveBy,
@@ -82,7 +85,7 @@ public class TicTacTwoBrain
 
     public string GetGameConfigName()
     {
-        return _gameState.GameConfiguration.Name;
+        return _gameState.GameConfig.Name;
     }
 
     public bool CanMoveGrid(int directionX, int directionY)
@@ -119,7 +122,7 @@ public class TicTacTwoBrain
     public static bool IsWithinBounds(TicTacTwoBrain gameInstance, int x, int y)
     {
         int boardWidth = gameInstance.BoardWidth;
-        int boardHeight = gameInstance.BoardWidth;
+        int boardHeight = gameInstance.BoardHeight;
 
         return x >= 0 && x < boardWidth && y >= 0 && y < boardHeight;
     }
@@ -150,11 +153,11 @@ public class TicTacTwoBrain
     public int DimY => _gameState.GameBoard[0].Length;
 
     public (int x, int y) GridPosition => _gridPosition;
-    public int GridWidth => _gameConfiguration.GridWidth;
-    public int GridHeight => _gameConfiguration.GridHeight;
+    public int GridWidth => _gameConfig.GridWidth;
+    public int GridHeight => _gameConfig.GridHeight;
     
-    public int BoardWidth => _gameConfiguration.BoardSizeWidth;
-    public int BoardHeight => _gameConfiguration.BoardSizeHeight;
+    public int BoardWidth => _gameConfig.BoardSizeWidth;
+    public int BoardHeight => _gameConfig.BoardSizeHeight;
     public EGamePiece GetPiece(int x, int y) => _gameBoard[x][y];
 
     public bool MakeAMove(int x, int y)
@@ -220,20 +223,21 @@ public class TicTacTwoBrain
         count += CountInDirection(x, y, deltaX, deltaY, player);
         count += CountInDirection(x, y, -deltaX, -deltaY, player);
 
-        return count >= _gameConfiguration.WinCondition;
+        return count >= _gameConfig.WinCondition;
     }
+    
 
     private int CountInDirection(int x, int y, int deltaX, int deltaY, EGamePiece player)
     {
         int count = 0;
 
-        for (int i = 1; i < _gameConfiguration.WinCondition; i++)
+        for (int i = 1; i < _gameConfig.WinCondition; i++)
         {
             int checkX = x + i * deltaX;
             int checkY = y + i * deltaY;
             
-            if (checkX >= 0 && checkX < _gameConfiguration.BoardSizeWidth &&
-                checkY >= 0 && checkY < _gameConfiguration.BoardSizeHeight &&
+            if (checkX >= 0 && checkX < _gameConfig.BoardSizeWidth &&
+                checkY >= 0 && checkY < _gameConfig.BoardSizeHeight &&
                 _gameBoard[checkX][checkY] == player)
             {
                 count++;
@@ -249,10 +253,10 @@ public class TicTacTwoBrain
     
     public void ResetGame()
     {
-        var gameBoard = new EGamePiece[_gameState.GameConfiguration.BoardSizeWidth][];
+        var gameBoard = new EGamePiece[_gameState.GameConfig.BoardSizeWidth][];
         for (var x = 0; x < gameBoard.Length; x++)
         {
-            gameBoard[x] = new EGamePiece[_gameState.GameConfiguration.BoardSizeWidth];
+            gameBoard[x] = new EGamePiece[_gameState.GameConfig.BoardSizeWidth];
         }
 
         _gameState.GameBoard = gameBoard;

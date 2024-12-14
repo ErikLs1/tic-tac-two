@@ -48,13 +48,13 @@ public class GameRepositoryDb : IGameRepository
             {
                 config = new GameConfiguration()
                 {
-                    Name = gameState.GameConfiguration.Name,
-                    BoardSizeWidth = gameState.GameConfiguration.BoardSizeWidth,
-                    BoardSizeHeight = gameState.GameConfiguration.BoardSizeHeight,
-                    GridWidth = gameState.GameConfiguration.GridWidth,
-                    GridHeight = gameState.GameConfiguration.GridHeight,
-                    WinCondition = gameState.GameConfiguration.WinCondition,
-                    MovePieceAfterNMoves = gameState.GameConfiguration.MovePieceAfterNMoves
+                    Name = gameState.GameConfig.Name,
+                    BoardSizeWidth = gameState.GameConfig.BoardSizeWidth,
+                    BoardSizeHeight = gameState.GameConfig.BoardSizeHeight,
+                    GridWidth = gameState.GameConfig.GridWidth,
+                    GridHeight = gameState.GameConfig.GridHeight,
+                    WinCondition = gameState.GameConfig.WinCondition,
+                    MovePieceAfterNMoves = gameState.GameConfig.MovePieceAfterNMoves
                 };
                 context.Configurations.Add(config);
                 context.SaveChanges();
@@ -99,7 +99,7 @@ public class GameRepositoryDb : IGameRepository
 
         var gameBoard = JsonSerializer.Deserialize<EGamePiece[][]>(game.GameBoardSerialized)!;
 
-        var gameConfiguration = new GameBrain.GameConfiguration
+        var gameConfiguration = new GameBrain.GameConfig
         {
             Name = game.SaveName, // Change if needed
             BoardSizeWidth = game.Configuration.BoardSizeWidth,
@@ -133,7 +133,7 @@ public class GameRepositoryDb : IGameRepository
             var gameBoard = JsonSerializer.Deserialize<EGamePiece[][]>(game.GameBoardSerialized)
                             ?? throw new Exception("Failed to deserialize game board");
 
-            var gameConfiguration = new GameBrain.GameConfiguration
+            var gameConfiguration = new GameBrain.GameConfig
             {
                 Name = game.SaveName,
                 BoardSizeWidth = game.Configuration.BoardSizeWidth,

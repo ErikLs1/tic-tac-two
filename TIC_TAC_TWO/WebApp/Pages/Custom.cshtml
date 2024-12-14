@@ -1,0 +1,122 @@
+@page
+@model WebApp.Pages.Custom
+
+@{
+    Layout = "Shared/_Layout";
+}<div class="custom-config-container d-flex justify-content-center align-items-center">
+    <div class="config-form-wrapper">
+        <h1 class="text-center mb-4 mt-4">Game Configuration</h1>
+
+        <form method="post" class="p-4 shadow-sm rounded">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="GameConfig.Name" class="form-label fw-bold"></label>
+                <input asp-for="GameConfig.Name" class="form-control shadow-sm" required />
+                <span asp-validation-for="GameConfig.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="GameConfig.BoardSizeWidth" class="form-label fw-bold"></label>
+                <input asp-for="GameConfig.BoardSizeWidth" class="form-control shadow-sm" required />
+                <span asp-validation-for="GameConfig.BoardSizeWidth" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="GameConfig.BoardSizeHeight" class="form-label fw-bold"></label>
+                <input asp-for="GameConfig.BoardSizeHeight" class="form-control shadow-sm" required />
+                <span asp-validation-for="GameConfig.BoardSizeHeight" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="GameConfig.GridWidth" class="form-label fw-bold"></label>
+                <input asp-for="GameConfig.GridWidth" class="form-control shadow-sm" required />
+                <span asp-validation-for="GameConfig.GridWidth" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="GameConfig.GridHeight" class="form-label fw-bold"></label>
+                <input asp-for="GameConfig.GridHeight" class="form-control shadow-sm" required />
+                <span asp-validation-for="GameConfig.GridHeight" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="GameConfig.WinCondition" class="form-label fw-bold"></label>
+                <input asp-for="GameConfig.WinCondition" class="form-control shadow-sm" required />
+                <span asp-validation-for="GameConfig.WinCondition" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="GameConfig.MovePieceAfterNMoves" class="form-label fw-bold"></label>
+                <input asp-for="GameConfig.MovePieceAfterNMoves" class="form-control shadow-sm" required />
+                <span asp-validation-for="GameConfig.MovePieceAfterNMoves" class="text-danger"></span>
+            </div>
+            
+            <div class="text-center mt-4">
+                <input type="submit" value="Create" class="btn btn-dark btn-lg px-4 shadow-sm"/>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <a asp-page="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-config-container {
+        height: auto; 
+        min-height: 100vh; 
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; 
+        padding: 20px;
+    }
+
+    .config-form-wrapper {
+        width: 100%; 
+        max-width: 500px; 
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #343a40;
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #495057;
+    }
+
+    input.form-control {
+        height: 45px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    input.form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    .btn {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
+    .text-center .btn-outline-secondary {
+        margin-top: 10px;
+    }
+</style>

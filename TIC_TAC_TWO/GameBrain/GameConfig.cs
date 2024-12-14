@@ -1,6 +1,6 @@
 namespace GameBrain;
 
-public record struct GameConfiguration()
+public record class GameConfig()
 {
     public string Name { get; set; } = default!;
     

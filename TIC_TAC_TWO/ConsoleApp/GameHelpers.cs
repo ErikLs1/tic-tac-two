@@ -111,7 +111,7 @@ public class GameHelpers
         } while (true);
     }
     
-    public static GameConfiguration SelectConfiguration()
+    public static GameConfig SelectConfiguration()
     {
         int chosenConfigIndex = ChooseConfiguration();
         var configNames = ConfigRepositoryHardcoded.GetConfigurationNames();

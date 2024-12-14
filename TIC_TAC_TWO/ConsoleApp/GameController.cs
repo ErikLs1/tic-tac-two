@@ -22,7 +22,7 @@ public class GameController
             ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
             Console.WriteLine();
 
-            if (gameInstance.MoveCount >= 4)
+            if (gameInstance.MoveCount >= gameInstance.MovePieceAfterNMoves)
             {
                 string choice = GameHelpers.GetPlayerChoice();
                 GameHelpers.HandlePlayerChoice(choice, gameInstance);

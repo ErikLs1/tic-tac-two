@@ -34,20 +34,30 @@ public class IndexModel : PageModel
         return Page();
     }
 
-    public IActionResult OnPost()
+    public IActionResult OnPost(string action)
     {
-        if (!ModelState.IsValid)
+        if (action == "customConfig")
         {
-            var selectListData = _configRepository.GetConfigurationNames()
-                .Select(config => new
-                {
-                    Id = config.Id, 
-                    Name = config.Name
-                })
-                .ToList();
-            ConfigSelectList = new SelectList(selectListData, "Id", "Name");
-            return Page();
+            return RedirectToPage("./Custom");
         }
-        return RedirectToPage("./PlayGame", new {ConfigId = this.ConfigId});
+
+        if (action == "createGame")
+        {
+            if (!ModelState.IsValid || ConfigId == 0)
+            {
+                var selectListData = _configRepository.GetConfigurationNames()
+                    .Select(config => new
+                    {
+                        Id = config.Id, 
+                        Name = config.Name
+                    })
+                    .ToList();
+                ConfigSelectList = new SelectList(selectListData, "Id", "Name");
+                return Page();
+            }
+            return RedirectToPage("./PlayGame", new {ConfigId});
+        }
+
+        return Page();
     }
 }

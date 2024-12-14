@@ -6,14 +6,14 @@ public class GameState
     public EGamePiece[][] GameBoard { get; set; }
     public EGamePiece NextMoveBy { get; set; } = EGamePiece.X;
 
-    public GameConfiguration GameConfiguration { get; set; }
+    public GameConfig GameConfig { get; set; }
     public int MoveCount { get; set; }
     public int GridPositionX { get; set; }
     public int GridPositionY { get; set; }
-    public GameState(EGamePiece[][] gameBoard, GameConfiguration gameConfiguration)
+    public GameState(EGamePiece[][] gameBoard, GameConfig gameConfig)
     {
         GameBoard = gameBoard;
-        GameConfiguration = gameConfiguration;
+        GameConfig = gameConfig;
     }
 
     public override string ToString()

@@ -3,160 +3,243 @@
 @model WebApp.Pages.PlayGame
 
 @{
-Layout = "Shared/_Layout";
-var boardWidth = Model.TicTacTwoBrain.BoardWidth;
-var boardHeight = Model.TicTacTwoBrain.BoardHeight; 
+    Layout = "Shared/_Layout";
+    var boardWidth = Model.TicTacTwoBrain.BoardWidth;
+    var boardHeight = Model.TicTacTwoBrain.BoardHeight;
+    
 }
 
-<div class="container mt-5 d-flex flex-column align-items-center">
-    <!-- Game Information -->
-    <div class="text-center mb-4">
-        <h2>Play Tic-Tac-Toe</h2>
-        <p><strong>Next move by:</strong> @Model.TicTacTwoBrain._nextMoveBy</p>
-        @* <p><strong>Configuration ID:</strong> @Model.ConfigId</p> *@
-        <p><strong>Game ID:</strong> @Model.GameId</p>
-    </div>
 
-    <!-- Display Messages -->
-    @if (!string.IsNullOrEmpty(Model.Message))
-    {
-    <div class="alert alert-info w-100 text-center" role="alert">
-        @Model.Message
+@if (Model.IsGameOver)
+{
+    <div class="game-over-container d-flex justify-content-center align-items-center">
+        <div class="winner-box text-center p-5 shadow-sm rounded">
+            <h1 class="text-success fw-bold">🎉 Game Over 🎉</h1>
+            <p class="winner-message my-4">
+                <strong>@Model.Message</strong>
+            </p>
+            <div class="mt-4">
+                <a href="@Url.Page("./PlayGame")" class="btn btn-primary btn-lg px-4 mx-2 shadow-sm">Start New Game</a>
+                <a href="@Url.Page("./Index")" class="btn btn-outline-secondary btn-lg px-4 mx-2 shadow-sm">Back to Main Menu</a>
+            </div>
+        </div>
     </div>
-    }
+    <style>
+        .game-over-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    @if (TempData["Error"] != null)
-    {
-    <div class="alert alert-danger w-100 text-center" role="alert">
-        @TempData["Error"]
-    </div>
-    }
+        .winner-box {
+            max-width: 600px;
+            background-color: #ffffff;
+            border: 2px solid #28a745;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
 
-    <!-- Game Board -->
-    <div class="game-board">
-        @for (int y = 0; y < boardHeight; y++)
+        .winner-box h1 {
+            font-size: 32px;
+            color: #28a745; /* Success green color */
+            margin-bottom: 20px;
+        }
+
+        .winner-message {
+            font-size: 20px;
+            font-weight: bold;
+            color: #343a40; /* Dark text color for readability */
+        }
+
+        .btn {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+}
+else
+{
+    <div class="container mt-5 d-flex flex-column align-items-center">
+        <div class="text-center mb-4">
+            <h2>Play Tic-Tac-Toe</h2>
+            <p>
+                <strong>Next move by:</strong> @Model.TicTacTwoBrain._nextMoveBy
+            </p>
+            <p>
+                <strong>Game ID:</strong> @Model.GameId
+            </p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
         {
-            <div class="row">
-                @for (int x = 0; x < boardWidth; x++)
-                {
-                    // Determine if the cell is inside the grid area
-                    bool isInGridArea = y >= @Model.TicTacTwoBrain.GridPosition.y &&
-                                        y < @Model.TicTacTwoBrain.GridPosition.y + @Model.TicTacTwoBrain.GridHeight &&
-                                        x >= @Model.TicTacTwoBrain.GridPosition.x &&
-                                        x < @Model.TicTacTwoBrain.GridPosition.x + @Model.TicTacTwoBrain.GridWidth;
-
-                    var piece = Model.TicTacTwoBrain.GameBoard[x][y];
-                    <div class="col p-1">
-                        <form method="post" asp-page="./PlayGame" class="m-0">
-                            <input type="hidden" name="X" value="@x" />
-                            <input type="hidden" name="Y" value="@y" />
-                            <input type="hidden" name="GameId" value="@Model.GameId" />
-                            
-                            @if (Model.IsActionInProgress && Model.Action == "Make-a-Move")
-                            {
-                                <input type="hidden" name="Action" value="Make-a-Move" />
-                                <input type="hidden" name="IsActionInProgress" value="true" />
-                            }
-
-                            @if (Model.IsActionInProgress && Model.Action == "Move-the-Piece")
-                            {
-                            <input type="hidden" name="Action" value="Move-the-Piece" />
-                            <input type="hidden" name="IsActionInProgress" value="true" />
-                            
-                            @if (Model.SelectedPieceX.HasValue && Model.SelectedPieceY.HasValue)
-                            {
-                            <input type="hidden" name="SelectedPieceX" value="@Model.SelectedPieceX.Value" />
-                            <input type="hidden" name="SelectedPieceY" value="@Model.SelectedPieceY.Value" />
-                            }
-                            
-                            }
-                            <button type="submit" class="btn cell-btn @(isInGridArea ? "grid-cell" : "")">
-                                @if (piece == EGamePiece.X)
-                                {
-                                    <span class="text-primary fw-bold">X</span>
-                                }
-                                else if (piece == EGamePiece.O)
-                                {
-                                    <span class="text-success fw-bold">O</span>
-                                }
-                            </button>
-                        </form>
-                    </div>
-                }
+            <div class="alert alert-info w-100 text-center" role="alert">
+                @Model.Message
             </div>
         }
-    </div>
-    @if (Model.TicTacTwoBrain.MoveCount >= 4 && !Model.IsActionInProgress) // FIX LATER (MOVE PIECE AFTER N MOVES)
-    {
-        <div class="action-container mt-4">
-            <h3 class="text-center mb-3">Choose Action</h3>
-            <div class="d-flex justify-content-center gap-3">
-                <form method="post" asp-page="./PlayGame" class="m-0">
-                    <input type="hidden" name="Action" value="Make-a-Move"/>
-                    <input type="hidden" name="GameId" value="@Model.GameId"/>
-                    <button type="submit" class="btn btn-primary action-btn">Make a Move</button>
-                </form>
 
-                <form method="post" asp-page="./PlayGame" class="m-0">
-                    <input type="hidden" name="Action" value="Move-the-Grid"/>
-                    <input type="hidden" name="GameId" value="@Model.GameId"/>
-                    <button type="submit" class="btn btn-warning action-btn">Move the Grid</button>
-                </form>
-
-                <form method="post" asp-page="./PlayGame" class="m-0">
-                    <input type="hidden" name="Action" value="Move-the-Piece"/>
-                    <input type="hidden" name="GameId" value="@Model.GameId"/>
-                    <button type="submit" class="btn btn-success action-btn">Move the Piece</button>
-                </form>
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger w-100 text-center mb-4" role="alert">
+                @TempData["Error"]
             </div>
-        </div>
-    }
+        }
 
-    
-    @if (Model.IsActionInProgress && Model.Action == "Move-the-Grid")
-    {
-        <div class="direction-container mt-4">
-            <h3 class="text-center mb-2">Choose Direction</h3>
-            <div class="d-grid direction-grid">
-                <!-- Each direction is a separate form submission -->
-                @foreach (var direction in new[] { "Up-Left", "Up", "Up-Right", "Left", "Right", "Down-Left", "Down", "Down-Right" })
-                {
+        <div class="game-board">
+            @for (int y = 0; y < boardHeight; y++)
+            {
+                <div class="row">
+                    @for (int x = 0; x < boardWidth; x++)
+                    {
+                        // Determine if the cell is inside the grid area
+                        bool isInGridArea = y >= @Model.TicTacTwoBrain.GridPosition.y &&
+                                            y < @Model.TicTacTwoBrain.GridPosition.y + @Model.TicTacTwoBrain.GridHeight &&
+                                            x >= @Model.TicTacTwoBrain.GridPosition.x &&
+                                            x < @Model.TicTacTwoBrain.GridPosition.x + @Model.TicTacTwoBrain.GridWidth;
+
+                        var piece = Model.TicTacTwoBrain.GameBoard[x][y];
+                        <div class="col p-1">
+                            <form method="post" asp-page="./PlayGame" class="m-0">
+                                <input type="hidden" name="X" value="@x"/>
+                                <input type="hidden" name="Y" value="@y"/>
+                                <input type="hidden" name="GameId" value="@Model.GameId"/>
+
+                                @if (Model.IsActionInProgress && Model.Action == "Make-a-Move")
+                                {
+                                    <input type="hidden" name="Action" value="Make-a-Move"/>
+                                    <input type="hidden" name="IsActionInProgress" value="true"/>
+                                }
+
+                                @if (Model.IsActionInProgress && Model.Action == "Move-the-Piece")
+                                {
+                                    <input type="hidden" name="Action" value="Move-the-Piece"/>
+                                    <input type="hidden" name="IsActionInProgress" value="true"/>
+
+                                    @if (Model.SelectedPieceX.HasValue && Model.SelectedPieceY.HasValue)
+                                    {
+                                        <input type="hidden" name="SelectedPieceX" value="@Model.SelectedPieceX.Value"/>
+                                        <input type="hidden" name="SelectedPieceY" value="@Model.SelectedPieceY.Value"/>
+                                    }
+                                }
+                                <button type="submit" class="btn cell-btn @(isInGridArea ? "grid-cell" : "")">
+                                    @if (piece == EGamePiece.X)
+                                    {
+                                        <span class="text-primary fw-bold">X</span>
+                                    }
+                                    else if (piece == EGamePiece.O)
+                                    {
+                                        <span class="text-success fw-bold">O</span>
+                                    }
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        ssd @Model.TicTacTwoBrain.MovePieceAfterNMoves
+        @if (Model.TicTacTwoBrain.MoveCount >= Model.TicTacTwoBrain.MovePieceAfterNMoves && !Model.IsActionInProgress) // FIX LATER (MOVE PIECE AFTER N MOVES)
+        {
+            <div class="action-container mt-4">
+                <h3 class="text-center mb-3">Choose Action</h3>
+                <div class="d-flex justify-content-center gap-3">
                     <form method="post" asp-page="./PlayGame" class="m-0">
-                        <input type="hidden" name="Action" value="Move-the-Grid" />
-                        <input type="hidden" name="Direction" value="@direction" />
-                        <input type="hidden" name="GameId" value="@Model.GameId" />
-                        <button type="submit" class="btn btn-secondary direction-btn">@direction</button>
+                        <input type="hidden" name="Action" value="Make-a-Move"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-primary action-btn">Make a Move</button>
                     </form>
-                }
+
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-warning action-btn">Move the Grid</button>
+                    </form>
+
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Piece"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-success action-btn">Move the Piece</button>
+                    </form>
+                </div>
             </div>
+        }
+
+
+        @if (Model.IsActionInProgress && Model.Action == "Move-the-Grid")
+        {
+            <div class="direction-container mt-4">
+                <h3 class="text-center mb-2">Choose Direction</h3>
+                <div class="d-grid direction-grid">
+                    <!-- Top Row -->
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="Direction" value="Up-Left"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-secondary direction-btn">Up-Left</button>
+                    </form>
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="Direction" value="Up"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-secondary direction-btn">Up</button>
+                    </form>
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="Direction" value="Up-Right"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-secondary direction-btn">Up-Right</button>
+                    </form>
+
+                    <!-- Middle Row -->
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="Direction" value="Left"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-secondary direction-btn">Left</button>
+                    </form>
+                    <!-- Empty space in the middle -->
+                    <div></div>
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="Direction" value="Right"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-secondary direction-btn">Right</button>
+                    </form>
+
+                    <!-- Bottom Row -->
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="Direction" value="Down-Left"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-secondary direction-btn">Down-Left</button>
+                    </form>
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="Direction" value="Down"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-secondary direction-btn">Down</button>
+                    </form>
+                    <form method="post" asp-page="./PlayGame" class="m-0">
+                        <input type="hidden" name="Action" value="Move-the-Grid"/>
+                        <input type="hidden" name="Direction" value="Down-Right"/>
+                        <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <button type="submit" class="btn btn-secondary direction-btn">Down-Right</button>
+                    </form>
+                </div>
+            </div>
+        }
+
+        <div class="mt-4 text-center">
+            <a href="@Url.Page("./Index")" class="btn btn-danger">Start New Game</a>
         </div>
-        @* <div class="direction-container mt-4"> *@
-        @*     <h3 class="text-center mb-2">Choose Direction</h3> *@
-        @*     <div class="d-grid direction-grid"> *@
-        @*         <button type="button" class="btn btn-secondary direction-btn">Up-Left</button> *@
-        @*         <button type="button" class="btn btn-secondary direction-btn">Up</button> *@
-        @*         <button type="button" class="btn btn-secondary direction-btn">Up-Right</button> *@
-        @*         <button type="button" class="btn btn-secondary direction-btn">Left</button> *@
-        @*         <div></div> *@
-        @*         <button type="button" class="btn btn-secondary direction-btn">Right</button> *@
-        @*         <button type="button" class="btn btn-secondary direction-btn">Down-Left</button> *@
-        @*         <button type="button" class="btn btn-secondary direction-btn">Down</button> *@
-        @*         <button type="button" class="btn btn-secondary direction-btn">Down-Right</button> *@
-        @*     </div> *@
-        @* </div> *@
-    }
-
-    <!-- Reset Game Button -->
-    <div class="mt-4 text-center">
-        <a href="@Url.Page("./Index")" class="btn btn-danger">Start New Game</a>
     </div>
-</div>
-
-@* <!-- Bootstrap JS (Optional, for interactive components) --> *@
-@* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> *@
-
-<!-- Custom CSS -->
-<style>
+    <style>
     .game-board {
         display: inline-block;
         border: 2px solid #343a40;
@@ -268,5 +351,5 @@ var boardHeight = Model.TicTacTwoBrain.BoardHeight;
         background-color: #d6d8db;
     }
 
-
 </style>
+}

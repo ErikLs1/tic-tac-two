@@ -4,13 +4,13 @@ namespace DAL;
 
 public class ConfigRepositoryHardcoded
 {
-    private static List<GameConfiguration> _gameConfigurations = new List<GameConfiguration>()
+    private static List<GameConfig> _gameConfigurations = new List<GameConfig>()
     {
-        new GameConfiguration()
+        new GameConfig()
         {
             Name = "Classical (5x5)"
         },
-        new GameConfiguration()
+        new GameConfig()
         {
             Name = "Big board (10x10)",
             BoardSizeWidth = 10,
@@ -30,14 +30,14 @@ public class ConfigRepositoryHardcoded
             .ToList();
     }
 
-    public static GameConfiguration GetConfigurationByName(string name)
+    public static GameConfig GetConfigurationByName(string name)
     {
         return _gameConfigurations.Single(c => c.Name == name);
     }
 
-    public static GameConfiguration ConfigureCustomGame()
+    public static GameConfig ConfigureCustomGame()
     {
-        var config = new GameConfiguration();
+        var config = new GameConfig();
         
         Console.Clear();
         Console.WriteLine("\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m");

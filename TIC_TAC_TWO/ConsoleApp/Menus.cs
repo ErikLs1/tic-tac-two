@@ -66,7 +66,7 @@ public static class Menus
 
         foreach (var savedGame in savedGameNames)
         {
-            var displayName = savedGame.GameConfiguration.Name; 
+            var displayName = savedGame.GameConfig.Name; 
             var menuItem = new MenuItem()
             {
                 Shortcut = index.ToString(),

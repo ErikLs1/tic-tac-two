@@ -9,7 +9,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 
-//builder.Services.AddScoped<IConfigRepository, ConfigRepositoryJson>();
+// builder.Services.AddScoped<IConfigRepository, ConfigRepositoryJson>();
 // builder.Services.AddScoped<IGameRepository, GameRepositoryJson>();
 builder.Services.AddScoped<IConfigRepository, ConfigRepositoryDb>();
 builder.Services.AddScoped<IGameRepository, GameRepositoryDb>();

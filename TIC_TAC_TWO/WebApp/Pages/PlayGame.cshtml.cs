@@ -42,6 +42,7 @@
         public string Message { get; set; } = string.Empty;
         public bool IsGameOver { get; set; } = false;
         private string Winner { get; set; } = string.Empty;
+        
 
         public IActionResult OnGet()
         {
@@ -75,12 +76,20 @@
             // PLACING A PIECE WHEN ACTION IS MAKE A MOVE
             if (!string.IsNullOrEmpty(Action) && Action == "Make-a-Move" && IsActionInProgress && string.IsNullOrEmpty(Direction))
             {
-                _logger.LogInformation("Attempting to make a move at X={X}, Y={Y} under Make-a-Move action.", X, Y);
                 bool moveResult = TicTacTwoBrain.MakeAMove(X, Y);
                     
                 if (moveResult)
                 {
                     _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(), TicTacTwoBrain.GetGameConfigName());
+                    
+                    var winner = TicTacTwoBrain.CheckForWin(X, Y);
+                    if (winner != null)
+                    {
+                        IsGameOver = true;
+                        Message = $"Player {winner} wins!";
+                        return Page();
+                    }
+                    
                     Action = string.Empty;
                     IsActionInProgress = false;
                     return RedirectToPage("./PlayGame", new { GameId = GameId });
@@ -118,6 +127,15 @@
                     {
                         TicTacTwoBrain.MoveAPiece(SelectedPieceX.Value, SelectedPieceY.Value, X, Y);
                         _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(),TicTacTwoBrain.GetGameConfigName());
+                        
+                        var winner = TicTacTwoBrain.CheckForWin(X, Y);
+                        if (winner != null)
+                        {
+                            IsGameOver = true;
+                            Message = $"Player {winner} wins!";
+                            return Page();
+                        }
+                        
                         Action = string.Empty;
                         IsActionInProgress = false;
                         SelectedPieceX = null;
@@ -139,7 +157,16 @@
                
                 if (moveSuccess)
                 {
-                    _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(),TicTacTwoBrain.GetGameConfigName());
+                     _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(),TicTacTwoBrain.GetGameConfigName());
+                    
+                    var winner = TicTacTwoBrain.CheckForWin(X, Y);
+                    if (winner != null)
+                    {
+                        IsGameOver = true;
+                        Message = $"Player {winner} wins!";
+                        return Page();
+                    }
+                    
                     Message = $"Grid moved {Direction} successfully.";
                 }
                 else
@@ -172,7 +199,7 @@
             else
             {
                  
-                if (dbGame.MoveCount >= dbGame.GameConfiguration.MovePieceAfterNMoves)
+                if (dbGame.MoveCount >= dbGame.GameConfig.MovePieceAfterNMoves)
                 {
                     IsActionInProgress = true;
                     return Page();

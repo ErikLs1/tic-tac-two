@@ -25,7 +25,7 @@ public class ConfigRepositoryJson : IConfigRepository
         return configurationNames;
     }
 
-    public GameConfiguration GetConfigurationById(int id)
+    public GameConfig GetConfigurationById(int id)
     {
         var configFiles = Directory
             .GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension)
@@ -40,7 +40,7 @@ public class ConfigRepositoryJson : IConfigRepository
         var selectedFile = configFiles[id - 1]; // IDs start at 1
 
         var configJsonStr = File.ReadAllText(selectedFile);
-        var config = JsonSerializer.Deserialize<GameConfiguration>(configJsonStr);
+        var config = JsonSerializer.Deserialize<GameConfig>(configJsonStr);
 
         if (config == null)
         {
@@ -50,7 +50,12 @@ public class ConfigRepositoryJson : IConfigRepository
         return config;
     }
 
-    public void SaveConfiguration(GameConfiguration gameConfig)
+    public int SaveConfigurationAndGetId(GameConfig gameConfig)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SaveConfiguration(GameConfig gameConfig)
     {
         var optionJsonStr = System.Text.Json.JsonSerializer.Serialize(gameConfig);
         System.IO.File.WriteAllText(FileHelper.BasePath + gameConfig.Name + FileHelper.ConfigExtension, optionJsonStr);
