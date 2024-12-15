@@ -1,0 +1,77 @@
+@page
+@model WebApp.Pages.SqlSavedGames
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].Configuration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].SaveName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].NextMoveBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].MoveCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GridPositionX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GridPositionY)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GameBoardSerialized)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Game) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Configuration.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaveName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NextMoveBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MoveCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridPositionX)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridPositionY)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameBoardSerialized)
+            </td>
+            <td>
+                <a asp-page="./SqlDeleteGame" asp-route-id="@item.Id">Delete</a> |
+                <a asp-page="./PlayGame" asp-route-GameId="@item.Id">Load</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

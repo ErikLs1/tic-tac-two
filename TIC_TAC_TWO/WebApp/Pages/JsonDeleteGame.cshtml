@@ -1,0 +1,25 @@
+@page
+@model WebApp.Pages.JsonDeleteGame
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<h1>Delete Game</h1>
+
+<h3>Are you sure you want to delete this game?</h3>
+@if (Model.GameToDelete != null)
+{
+    <div>
+        <h4>Game Configuration: @Model.GameToDelete.GameConfig.Name</h4>
+        <p>Next Move By: @Model.GameToDelete.NextMoveBy</p>
+        <p>Move Count: @Model.GameToDelete.MoveCount</p>
+        <p>Grid Position: (@Model.GameToDelete.GridPositionX, @Model.GameToDelete.GridPositionY)</p>
+    </div>
+
+    <form method="post">
+        <input type="hidden" asp-for="GameId" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-page="./JsonSavedGames" class="btn btn-secondary">Cancel</a>
+    </form>
+}

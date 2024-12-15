@@ -1,0 +1,56 @@
+@page
+@model WebApp.Pages.JsonSavedGames
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<h1>Saved Games</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Games[0].GameConfig.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Games[0].NextMoveBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Games[0].MoveCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Games[0].GridPositionX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Games[0].GridPositionY)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Games) {
+        <tr>
+            <td>
+                @item.GameConfig.Name
+            </td>
+            <td>
+                @item.NextMoveBy
+            </td>
+            <td>
+                @item.MoveCount
+            </td>
+            <td>
+                @item.GridPositionX
+            </td>
+            <td>
+                @item.GridPositionY
+            </td>
+            <td>
+                <a asp-page="./JsonDeleteGame" asp-route-id="@item.GameId">Delete</a> |
+                <a asp-page="./PlayGame" asp-route-GameId="@item.GameId">Load</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
