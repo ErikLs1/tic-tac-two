@@ -204,9 +204,15 @@ public class TicTacTwoBrain
             Console.WriteLine("Invalid move. The start position does not contain your piece.");
         }
     }
-    
+
     public EGamePiece? CheckForWin(int x, int y)
     {
+        // Ensure the starting cell is within the grid
+        if (!IsWithinBoundsGrid(this, x, y))
+        {
+            return null;
+        }
+
         if (CheckDirection(x, y, 1, 0, _nextMoveBy) ||
             CheckDirection(x, y, 0, 1, _nextMoveBy) ||
             CheckDirection(x, y, 1, 1, _nextMoveBy) ||
@@ -214,17 +220,23 @@ public class TicTacTwoBrain
         {
             return _nextMoveBy;
         }
+
         return null;
     }
 
-    private bool CheckDirection(int x, int y, int deltaX, int deltaY, EGamePiece player)
-    {
-        int count = 1;
-        count += CountInDirection(x, y, deltaX, deltaY, player);
-        count += CountInDirection(x, y, -deltaX, -deltaY, player);
 
-        return count >= _gameConfig.WinCondition;
-    }
+    private bool CheckDirection(int x, int y, int deltaX, int deltaY, EGamePiece player)
+        {
+            int count = 1; // Start with the current piece
+
+            // Count pieces in the positive direction
+            count += CountInDirection(x, y, deltaX, deltaY, player);
+            
+            // Count pieces in the negative direction
+            count += CountInDirection(x, y, -deltaX, -deltaY, player);
+
+            return count >= _gameConfig.WinCondition;
+        }
     
 
     private int CountInDirection(int x, int y, int deltaX, int deltaY, EGamePiece player)
@@ -235,9 +247,11 @@ public class TicTacTwoBrain
         {
             int checkX = x + i * deltaX;
             int checkY = y + i * deltaY;
-            
+                
+            // Ensure the cell is within the board and the grid
             if (checkX >= 0 && checkX < _gameConfig.BoardSizeWidth &&
                 checkY >= 0 && checkY < _gameConfig.BoardSizeHeight &&
+                IsWithinBoundsGrid(this, checkX, checkY) && // Ensure within grid
                 _gameBoard[checkX][checkY] == player)
             {
                 count++;
