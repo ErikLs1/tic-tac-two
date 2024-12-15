@@ -6,13 +6,34 @@ namespace DAL;
 public class GameRepositoryJson : IGameRepository
 {
     private static readonly string SaveDirectory = Path.Combine(FileHelper.BasePath, "Saves");
-    public void SaveGame(GameState gameState, string gameConfigName)
+    private const string GameExtension = ".game.json";
+    private readonly IConfigRepository _configRepo;
+
+    public GameRepositoryJson()
     {
+        _configRepo = new ConfigRepositoryJson();
         if (!Directory.Exists(SaveDirectory))
         {
             Directory.CreateDirectory(SaveDirectory);
         }
+    }
 
+    public void SaveGame(GameState gameState, string gameConfigName)
+    {
+        if (gameState == null)
+        {
+            throw new Exception();
+        }
+
+        var existingConfigs = _configRepo.GetConfigurationNames();
+        var config =
+            existingConfigs.FirstOrDefault(c => c.Name.Equals(gameConfigName, StringComparison.OrdinalIgnoreCase));
+        if (config.Id == 0)
+        {
+            throw new Exception($"Configuration '{gameConfigName}' does not exist.");
+        }
+
+        gameState.GameConfig.ConfigId = config.Id;
         string fileName;
         
         if (gameState.GameId.HasValue)
@@ -26,7 +47,7 @@ public class GameRepositoryJson : IGameRepository
         else
         {
             gameState.GameId = GetNextGameId();
-            fileName = $"{gameConfigName}_ID{gameState.GameId.Value}{FileHelper.GameExtension}";
+            fileName = $"{gameConfigName}_ID{gameState.GameId.Value}{GameExtension}";
         }
 
         var filePath = Path.Combine(SaveDirectory, fileName);
@@ -44,22 +65,29 @@ public class GameRepositoryJson : IGameRepository
             return savedGames;
         }
 
-        var files = Directory.GetFiles(SaveDirectory,$"*{FileHelper.GameExtension}");
+        var files = Directory.GetFiles(SaveDirectory,$"*{GameExtension}");
 
         foreach (var file in files)
         {
-            var json = File.ReadAllText(file);
-            var gameState = JsonSerializer.Deserialize<GameState>(json);
-            if (gameState != null)
+            try
             {
-                savedGames.Add(gameState);
+                var json = File.ReadAllText(file);
+                var gameState = JsonSerializer.Deserialize<GameState>(json);
+                if (gameState != null && gameState.GameId.HasValue)
+                {
+                    savedGames.Add(gameState);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to parse file {file}: {ex.Message}");
             }
         }
 
         return savedGames;
     }
 
-    public GameState LoadGame(int gameId) //game id
+    public GameState LoadGame(int gameId) 
     {
         var fileName = GetFileNameById(gameId);
         if (fileName == null)
@@ -76,7 +104,8 @@ public class GameRepositoryJson : IGameRepository
             throw new FileLoadException("Game not found");
         }
 
-        
+        var config = _configRepo.GetConfigurationById(gameState.GameConfig.ConfigId);
+        gameState.GameConfig = config;
         return gameState;
     }
     
@@ -94,8 +123,6 @@ public class GameRepositoryJson : IGameRepository
         {
             Console.WriteLine($"Game with ID {gameId} not found.");
         }
-        
-        //var filePath = Path.Combine(FileHelper.BasePath, Path.DirectorySeparatorChar + "Saves" + Path.DirectorySeparatorChar + gameName + FileHelper.GameExtension);
     }
 
     private int GetNextGameId()
@@ -106,7 +133,7 @@ public class GameRepositoryJson : IGameRepository
 
     private string? GetFileNameById(int gameId)
     {
-        var files = Directory.GetFiles(SaveDirectory, $"*ID{gameId}*{FileHelper.GameExtension}");
+        var files = Directory.GetFiles(SaveDirectory, $"*ID{gameId}*{GameExtension}");
         return files.FirstOrDefault() != null ? Path.GetFileName(files.First()) : null;
     }
 }

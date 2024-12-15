@@ -2,9 +2,8 @@ namespace GameBrain;
 
 public record class GameConfig()
 {
+    public int ConfigId { get; set; } = default!;
     public string Name { get; set; } = default!;
-    
-    public string? SaveName { get; set; }
     public int BoardSizeWidth { get; set; } = 5;
     public int BoardSizeHeight { get; set; } = 5;
     public int GridWidth { get; set; } = 3;

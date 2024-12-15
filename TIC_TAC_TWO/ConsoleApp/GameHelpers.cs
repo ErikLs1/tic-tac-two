@@ -6,11 +6,11 @@ namespace ConsoleApp;
 
 public class GameHelpers
 {
-    // private static IConfigRepository _configRepository = new ConfigRepositoryJson();
-    // private static IGameRepository _gameRepository = new GameRepositoryJson();
+    private static IConfigRepository _configRepository = new ConfigRepositoryJson();
+    private static IGameRepository _gameRepository = new GameRepositoryJson();
     
-    private static IConfigRepository _configRepository = new ConfigRepositoryDb();
-    private static IGameRepository _gameRepository = new GameRepositoryDb();
+    // private static IConfigRepository _configRepository = new ConfigRepositoryDb();
+    // private static IGameRepository _gameRepository = new GameRepositoryDb();
 
     public static void InitializeRepositories(IConfigRepository configRepository, IGameRepository gameRepository)
     {
@@ -253,13 +253,9 @@ public class GameHelpers
     {
         Console.Write("Enter a name for your game: ");
         var saveName = Console.ReadLine()?.Trim();
-        if (string.IsNullOrEmpty(saveName))
-        {
-            saveName = "GameSave";
-        }
 
         var gameState = gameInstance.GetGameState();
-        _gameRepository.SaveGame(gameState, saveName);
+        _gameRepository.SaveGame(gameState, gameInstance.GetGameConfigName());
         
         Console.WriteLine("Game has been saved. Exiting the game...");
         Environment.Exit(0);
