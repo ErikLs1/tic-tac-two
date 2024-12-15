@@ -1,6 +1,99 @@
 @page
-@model WebApp.Pages.LoginPage
+@model WebApp.LoginPage
 
 @{
     Layout = "Shared/_Layout";
 }
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="login-card shadow-lg p-4 rounded bg-white">
+        <h2 class="text-center fw-bold mb-4" style="color: #343a40;">Welcome!</h2>
+
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+        <div class="alert alert-danger">
+            @Model.Error
+        </div>
+        }
+
+        <form method="post">
+            <div class="form-group mb-3">
+                <label asp-for="UserName" class="form-label fw-bold">Username</label>
+                <input asp-for="UserName" class="form-control shadow-sm" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Password" class="form-label fw-bold">Password</label>
+                <input asp-for="Password" type="password" class="form-control shadow-sm" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm">Login</button>
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="#" class="text-decoration-none" style="color: #6a11cb;">Forgot your password?</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    .login-card {
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        padding: 30px;
+        max-width: 400px;
+        width: 100%;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        height: 45px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        border-color: #6a11cb;
+        box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
+    }
+
+    .btn-primary {
+        background-color: #6a11cb;
+        border: none;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background-color: #2575fc;
+        transform: scale(1.05);
+    }
+
+    h2 {
+        color: #343a40;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .forgot-password {
+        font-size: 14px;
+        text-align: center;
+        display: block;
+        margin-top: 10px;
+        color: #6a11cb;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .forgot-password:hover {
+        color: #2575fc;
+    }
+</style>

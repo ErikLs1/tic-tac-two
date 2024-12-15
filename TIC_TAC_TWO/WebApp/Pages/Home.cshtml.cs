@@ -1,4 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
 using DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,16 +5,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp.Pages;
 
-public class IndexModel : PageModel
+public class Home : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
+    private readonly ILogger<Home> _logger;
     private readonly IConfigRepository _configRepository;
 
-    public IndexModel(ILogger<IndexModel> logger, IConfigRepository configRepository)
+    public Home(ILogger<Home> logger, IConfigRepository configRepository)
     {
         _logger = logger;
         _configRepository = configRepository;
     }
+
 
     public SelectList? ConfigSelectList { get; set; }
     

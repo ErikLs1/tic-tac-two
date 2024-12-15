@@ -17,7 +17,11 @@ builder.Services.AddScoped<IGameRepository, GameRepositoryDb>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages()
+    .AddRazorPagesOptions(options =>
+    {
+        options.Conventions.AddPageRoute("/LoginPage", "");
+    });
 
 var app = builder.Build();
 
