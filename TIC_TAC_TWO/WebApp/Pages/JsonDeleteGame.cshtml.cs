@@ -16,11 +16,17 @@ public class JsonDeleteGame : PageModel
 
     [BindProperty(SupportsGet = true)]
     public int GameId { get; set; }
+    [BindProperty(SupportsGet = true)] public string Username { get; set; } = default!;
     
     public GameState? GameToDelete { get; set; }
     
     public IActionResult OnGet(int id)
     {
+        if (string.IsNullOrEmpty(Username))
+        {
+            return RedirectToPage("./LoginPage", new { error = "No username provided." });
+        }
+        
         if (id <= 0)
         {
             return NotFound();
@@ -48,11 +54,10 @@ public class JsonDeleteGame : PageModel
         try
         {
             _gameRepository.DeleteGame(id);
-            return RedirectToPage("./JsonSavedGames");
+            return RedirectToPage("./JsonSavedGames", new {Username});
         }
         catch (Exception ex)
         {
-            // Handle exceptions (e.g., game not found)
             ModelState.AddModelError(string.Empty, ex.Message);
             return Page();
         }

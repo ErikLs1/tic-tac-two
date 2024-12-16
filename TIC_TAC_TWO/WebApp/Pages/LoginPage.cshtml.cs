@@ -23,13 +23,12 @@ public class LoginPage : PageModel
     public string? Error { get; set; }
     
     [BindProperty(SupportsGet = true)]
-    public string? UserName { get; set; }
+    public string? Username { get; set; }
     
     [BindProperty(SupportsGet = true)]
     public string? Password { get; set; }
     public void OnGet()
     {
-        
     }
     
     public IActionResult OnPost()
@@ -39,7 +38,7 @@ public class LoginPage : PageModel
             return Page();
         }
         
-        var inputUsername = UserName?.Trim();
+        var inputUsername = Username?.Trim();
         var inputPassword = Password?.Trim();
 
         var user = _users.FirstOrDefault(u =>
@@ -48,7 +47,7 @@ public class LoginPage : PageModel
 
         if (user != null)
         {
-            return RedirectToPage("./Home", new { UserName });
+            return RedirectToPage("./Home", new {Username});
         }
         else
         {

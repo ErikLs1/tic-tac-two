@@ -6,7 +6,7 @@
     Layout = "Shared/_Layout";
     var boardWidth = Model.TicTacTwoBrain.BoardWidth;
     var boardHeight = Model.TicTacTwoBrain.BoardHeight;
-    
+    ViewData["Username"] = Model.Username;
 }
 
 
@@ -19,8 +19,8 @@
                 <strong>@Model.Message</strong>
             </p>
             <div class="mt-4">
-                <a href="@Url.Page("./PlayGame")" class="btn btn-primary btn-lg px-4 mx-2 shadow-sm">Start New Game</a>
-                <a href="@Url.Page("./Index")" class="btn btn-outline-secondary btn-lg px-4 mx-2 shadow-sm">Back to Main Menu</a>
+                <a asp-route-Username="@Model.Username" asp-page="./Home" class="btn btn-primary btn-lg px-4 mx-2 shadow-sm">Start New Game</a>
+                <a asp-route-Username="@Model.Username" asp-page="./Home" class="btn btn-outline-secondary btn-lg px-4 mx-2 shadow-sm">Back to Main Menu</a>
             </div>
         </div>
     </div>
@@ -109,22 +109,26 @@ else
                                 <input type="hidden" name="X" value="@x"/>
                                 <input type="hidden" name="Y" value="@y"/>
                                 <input type="hidden" name="GameId" value="@Model.GameId"/>
+                                <input type="hidden" name="Username" value="@Model.Username"/>
 
                                 @if (Model.IsActionInProgress && Model.Action == "Make-a-Move")
                                 {
                                     <input type="hidden" name="Action" value="Make-a-Move"/>
                                     <input type="hidden" name="IsActionInProgress" value="true"/>
+                                    <input type="hidden" name="Username" value="@Model.Username"/>
                                 }
 
                                 @if (Model.IsActionInProgress && Model.Action == "Move-the-Piece")
                                 {
                                     <input type="hidden" name="Action" value="Move-the-Piece"/>
                                     <input type="hidden" name="IsActionInProgress" value="true"/>
+                                    <input type="hidden" name="Username" value="@Model.Username"/>
 
                                     @if (Model.SelectedPieceX.HasValue && Model.SelectedPieceY.HasValue)
                                     {
                                         <input type="hidden" name="SelectedPieceX" value="@Model.SelectedPieceX.Value"/>
                                         <input type="hidden" name="SelectedPieceY" value="@Model.SelectedPieceY.Value"/>
+                                        <input type="hidden" name="Username" value="@Model.Username"/>
                                     }
                                 }
                                 <button type="submit" class="btn cell-btn @(isInGridArea ? "grid-cell" : "")">
@@ -151,18 +155,21 @@ else
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Make-a-Move"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-primary action-btn">Make a Move</button>
                     </form>
 
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-warning action-btn">Move the Grid</button>
                     </form>
 
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Piece"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-success action-btn">Move the Piece</button>
                     </form>
                 </div>
@@ -180,18 +187,21 @@ else
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Up-Left"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Up-Left</button>
                     </form>
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Up"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Up</button>
                     </form>
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Up-Right"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Up-Right</button>
                     </form>
 
@@ -200,6 +210,7 @@ else
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Left"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Left</button>
                     </form>
                     <!-- Empty space in the middle -->
@@ -208,6 +219,7 @@ else
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Right"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Right</button>
                     </form>
 
@@ -216,18 +228,21 @@ else
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Down-Left"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Down-Left</button>
                     </form>
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Down"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Down</button>
                     </form>
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Down-Right"/>
                         <input type="hidden" name="GameId" value="@Model.GameId"/>
+                        <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Down-Right</button>
                     </form>
                 </div>
@@ -235,7 +250,7 @@ else
         }
 
         <div class="mt-4 text-center">
-            <a href="@Url.Page("./Index")" class="btn btn-danger">Start New Game</a>
+            <a asp-route-Username="@Model.Username" asp-page="./Home" class="btn btn-danger">Start New Game</a>
         </div>
     </div>
     <style>

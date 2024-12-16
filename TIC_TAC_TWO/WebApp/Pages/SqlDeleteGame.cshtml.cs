@@ -19,9 +19,17 @@ public class SqlDeleteGame : PageModel
 
     [BindProperty]
     public Game Game { get; set; } = default!;
-
+    [BindProperty(SupportsGet = true)] public string Username { get; set; } = default!;
+    
     public async Task<IActionResult> OnGetAsync(int? id)
     {
+        if (string.IsNullOrEmpty(Username))
+        {
+            return RedirectToPage("./LoginPage", new { error = "No username provided." });
+        }
+        
+        ViewData["UserName"] = Username;
+
         if (id == null)
         {
             return NotFound();
@@ -45,6 +53,8 @@ public class SqlDeleteGame : PageModel
         {
             return NotFound();
         }
+        
+        ViewData["UserName"] = Username;
 
         var game = await _context.Games.FindAsync(id);
         if (game != null)
@@ -54,6 +64,6 @@ public class SqlDeleteGame : PageModel
             await _context.SaveChangesAsync();
         }
 
-        return RedirectToPage("./SqlSavedGames");
+        return RedirectToPage("./SqlSavedGames", new {Username});
     }
 }

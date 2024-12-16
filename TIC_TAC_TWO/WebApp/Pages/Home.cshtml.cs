@@ -19,10 +19,18 @@ public class Home : PageModel
 
     public SelectList? ConfigSelectList { get; set; }
     
+    [BindProperty(SupportsGet = true)]
+    public string Username { get; set; } = default!;
+    
     [BindProperty]
     public int ConfigId { get; set; }
     public IActionResult OnGet()
     {
+        if (string.IsNullOrEmpty(Username))
+        {
+            return RedirectToPage("./LoginPage", new { error = "No username provided." });
+        }
+        
         var selectListData = _configRepository.GetConfigurationNames()
             .Select(config => new
             {
@@ -55,7 +63,7 @@ public class Home : PageModel
                 ConfigSelectList = new SelectList(selectListData, "Id", "Name");
                 return Page();
             }
-            return RedirectToPage("./PlayGame", new {ConfigId});
+            return RedirectToPage("./PlayGame", new {ConfigId,Username});
         }
 
         return Page();

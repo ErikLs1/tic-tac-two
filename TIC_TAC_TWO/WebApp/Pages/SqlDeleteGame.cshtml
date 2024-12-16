@@ -3,9 +3,13 @@
 
 @{
     Layout = "Shared/_Layout";
+    ViewData["Username"] = Model.Username;
 }
 
-<h1>Delete</h1>
+
+@if (!string.IsNullOrWhiteSpace(ViewData["Username"] as string))
+{
+    <h1>Delete</h1>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
@@ -65,6 +69,12 @@
     <form method="post">
         <input type="hidden" asp-for="Game.Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./SqlSavedGames">Back to List</a>
+        <a asp-route-Username="@Model.Username" asp-page="./SqlSavedGames">Back to List</a>
     </form>
 </div>
+}
+else
+{
+    <p>You are not a user</p>
+}
+

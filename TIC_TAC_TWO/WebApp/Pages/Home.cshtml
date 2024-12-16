@@ -3,9 +3,12 @@
 
 @{
     Layout = "Shared/_Layout";
+    ViewData["Username"] = Model.Username;
 }
 
-<div class="container mt-5">
+@if (!string.IsNullOrWhiteSpace(ViewData["Username"] as string))
+{
+    <div class="container mt-5">
     <div class="row justify-content-center">
         <!-- Reduced column size from col-md-6 to col-md-4 for a smaller form -->
         <div class="col-md-4">
@@ -77,3 +80,8 @@
         transform: scale(1.05);
     }
 </style>
+}
+else
+{
+    <p>You are not a user.</p>
+}

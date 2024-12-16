@@ -13,6 +13,7 @@ namespace WebApp.Pages.Games
     public class IndexModel : PageModel
     {
         private readonly DAL.AppDbContext _context;
+        [BindProperty(SupportsGet = true)] public string Username { get; set; } = default!;
 
         public IndexModel(DAL.AppDbContext context)
         {

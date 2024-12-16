@@ -4,9 +4,12 @@
 
 @{
     ViewData["Title"] = "Index";
+    ViewData["UserName"] = Model.Username;
 }
 
-<h1>Index</h1>
+@if ((ViewData["UserName"] as string) == "admin")
+{
+    <h1>Index</h1>
 
 <p>
     <a asp-page="Create">Create New</a>
@@ -78,3 +81,8 @@
 }
     </tbody>
 </table>
+}
+else
+{
+    <p>You are not an admin</p>
+}

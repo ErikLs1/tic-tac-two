@@ -3,12 +3,15 @@
 
 @{
     Layout = "Shared/_Layout";
+    ViewData["Username"] = Model.Username;
 }
 
-<h1>Saved Games</h1>
+@if (!string.IsNullOrWhiteSpace(ViewData["Username"] as string))
+{
+    <h1>Saved Games</h1>
 
-<table class="table table-striped">
-    <thead>
+    <table class="table table-striped">
+        <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Games[0].GameConfig.Name)
@@ -27,30 +30,35 @@
             </th>
             <th></th>
         </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Games) {
-        <tr>
-            <td>
-                @item.GameConfig.Name
-            </td>
-            <td>
-                @item.NextMoveBy
-            </td>
-            <td>
-                @item.MoveCount
-            </td>
-            <td>
-                @item.GridPositionX
-            </td>
-            <td>
-                @item.GridPositionY
-            </td>
-            <td>
-                <a asp-page="./JsonDeleteGame" asp-route-id="@item.GameId">Delete</a> |
-                <a asp-page="./PlayGame" asp-route-GameId="@item.GameId">Load</a>
-            </td>
-        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Games) {
+            <tr>
+                <td>
+                    @item.GameConfig.Name
+                </td>
+                <td>
+                    @item.NextMoveBy
+                </td>
+                <td>
+                    @item.MoveCount
+                </td>
+                <td>
+                    @item.GridPositionX
+                </td>
+                <td>
+                    @item.GridPositionY
+                </td>
+                <td>
+                    <a asp-page="./JsonDeleteGame" asp-route-Username="@Model.Username" asp-route-id="@item.GameId">Delete</a> |
+                    <a asp-page="./PlayGame" asp-route-Username="@Model.Username" asp-route-GameId="@item.GameId">Load</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
+else
+{
+    <p>You are not a user.</p>
+}

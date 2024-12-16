@@ -16,6 +16,7 @@
             _gameRepository = gameRepository;
             _logger = logger;
         }
+        [BindProperty(SupportsGet = true)] public string Username { get; set; } = default!;
 
         [BindProperty(SupportsGet = true)] public int GameId { get; set; } = default!;
 
@@ -46,6 +47,11 @@
 
         public IActionResult OnGet()
         {
+            if (string.IsNullOrEmpty(Username))
+            {
+                return RedirectToPage("./LoginPage", new { error = "No username provided." });
+            }
+            
             if (GameId > 0)
             {
                 var dbGame = _gameRepository.LoadGame(GameId);
@@ -59,7 +65,7 @@
                 var gameState = TicTacTwoBrain.GetGameState();
                 _gameRepository.SaveGame(gameState, TicTacTwoBrain.GetGameConfigName());
                 GameId = (int)gameState.GameId!;
-                return RedirectToPage("./PlayGame", new { GameId = GameId });
+                return RedirectToPage("./PlayGame", new { GameId,Username });
             }
             else
             {
@@ -92,7 +98,7 @@
                     
                     Action = string.Empty;
                     IsActionInProgress = false;
-                    return RedirectToPage("./PlayGame", new { GameId = GameId });
+                    return RedirectToPage("./PlayGame", new { GameId,Username });
                 }
                 else
                 {
@@ -140,7 +146,7 @@
                         IsActionInProgress = false;
                         SelectedPieceX = null;
                         SelectedPieceY = null;
-                        return RedirectToPage("./PlayGame", new { GameId = GameId });
+                        return RedirectToPage("./PlayGame", new { GameId, Username });
                     }
                     else
                     {
@@ -173,7 +179,7 @@
                 {
                     Message = $"Cannot move grid {Direction}. Please choose a different direction.";
                 }
-                return RedirectToPage("./PlayGame", new { GameId = GameId });
+                return RedirectToPage("./PlayGame", new { GameId,Username });
             }
             // HANDLE ACTIONS
             else if (!string.IsNullOrEmpty(Action) && string.IsNullOrEmpty(Direction))
@@ -192,7 +198,7 @@
                         return Page();
                     default:
                         TempData["Error"] = "Unknown action selected.";
-                        return RedirectToPage("./PlayGame", new { GameId = GameId });
+                        return RedirectToPage("./PlayGame", new { GameId,Username });
                 }
             } 
             // NORMAL MOVES
@@ -211,7 +217,7 @@
                     if (moveResult)
                     {
                         _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(), TicTacTwoBrain.GetGameConfigName());
-                        return RedirectToPage("./PlayGame", new { GameId = GameId });
+                        return RedirectToPage("./PlayGame", new { GameId, Username });
                     }
                     else
                     {
