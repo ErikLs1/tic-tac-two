@@ -6,11 +6,11 @@ namespace ConsoleApp;
 
 public class GameHelpers
 {
-    private static IConfigRepository _configRepository = new ConfigRepositoryJson();
-    private static IGameRepository _gameRepository = new GameRepositoryJson();
+    // private static IConfigRepository _configRepository = new ConfigRepositoryJson();
+    // private static IGameRepository _gameRepository = new GameRepositoryJson();
     
-    // private static IConfigRepository _configRepository = new ConfigRepositoryDb();
-    // private static IGameRepository _gameRepository = new GameRepositoryDb();
+    private static IConfigRepository _configRepository = new ConfigRepositoryDb();
+    private static IGameRepository _gameRepository = new GameRepositoryDb();
 
     public static void InitializeRepositories(IConfigRepository configRepository, IGameRepository gameRepository)
     {
@@ -116,8 +116,55 @@ public class GameHelpers
         int chosenConfigIndex = ChooseConfiguration();
         var configNames = ConfigRepositoryHardcoded.GetConfigurationNames();
         return chosenConfigIndex >= configNames.Count
-            ? ConfigRepositoryHardcoded.ConfigureCustomGame()
+            ? ConfigureCustomGame()
             : ConfigRepositoryHardcoded.GetConfigurationByName(configNames[chosenConfigIndex]);
+    }
+    
+    public static GameConfig ConfigureCustomGame()
+    {
+        var config = new GameConfig();
+        
+        Console.Clear();
+        Console.WriteLine("\x1b[1m\x1b[35mTIC-TAC-TWO\x1b[0m\x1b[0m");
+        Console.WriteLine("\x1b[1m\x1b[36m====================\x1b[0m\x1b[0m");
+
+        Console.Write("Enter the name for the config: ");
+        var nameInput = Console.ReadLine()?.Trim();
+
+        while (string.IsNullOrWhiteSpace(nameInput))
+        {
+            Console.WriteLine("Invalid input. Please enter a non-empty name:");
+            nameInput = Console.ReadLine()?.Trim();
+        }
+
+        config.Name = nameInput;
+        config.BoardSizeWidth = CheckForValidInput("Enter the board width (minimum 3, maximum 25): ",3, 25);
+        config.BoardSizeHeight = CheckForValidInput("Enter the board height (minimum 3, maximum 25): ",3, 25);
+        config.GridWidth = CheckForValidInput($"Enter the grid width (minimum 3, max {config.BoardSizeWidth}): ",3, config.BoardSizeWidth);
+        config.GridHeight = CheckForValidInput($"Enter the grid height (minimum 3, max {config.BoardSizeHeight}): ",3, config.BoardSizeHeight);
+        config.WinCondition = CheckForValidInput($"Enter the winning condition (minimum 3): ",3);
+        config.MovePieceAfterNMoves = CheckForValidInput($"Enter after how many moves you can choose to move your piece (minimum 2): ",2);
+        
+        _configRepository.SaveConfiguration(config);
+        return config;
+    }
+    
+    private static int CheckForValidInput(string prompt, int min, int? max = null)
+    {
+        int inputValue;
+
+        while (true) 
+        {
+            Console.WriteLine(prompt);
+            var input = Console.ReadLine()!;
+            
+            if (int.TryParse(input, out inputValue) && inputValue >= min && (max == null || inputValue <= max))
+            {
+                return inputValue;
+            }
+            
+            Console.WriteLine($"Invalid input. Please enter a valid integer between {min} and {(max.HasValue ? max.Value.ToString() : "~")}.");
+        }
     }
 
     private static int ChooseConfiguration()
@@ -185,6 +232,8 @@ public class GameHelpers
 
     public static void ExecuteMove(TicTacTwoBrain gameInstance)
     {
+        var currentPlayer = gameInstance._nextMoveBy;
+        
         var (inputX, inputY) = InsertCoordinates(gameInstance);
         if (!gameInstance.MakeAMove(inputX, inputY))
         {
@@ -192,12 +241,12 @@ public class GameHelpers
             return;
         }
 
-        var winner = gameInstance.CheckForWin(inputX, inputY);
+        var winner = gameInstance.CheckForWin(inputX, inputY, currentPlayer);
         if (winner != null)
         {
             Console.Clear();
             DisplayHeader("We have a winner!");
-            Console.WriteLine($"{gameInstance.GetCurrentPlayer()} has won the game! \ud83e\udd73\ud83e\udd73\ud83e\udd73\ud83e\udd73 ");
+            Console.WriteLine($"{winner} has won the game! \ud83e\udd73\ud83e\udd73\ud83e\udd73\ud83e\udd73 ");
             Console.WriteLine();
             ConsoleUI.Visualizer.DrawBoard(gameInstance, gameInstance.GridPosition.x, gameInstance.GridPosition.y);
             Environment.Exit(0);
@@ -251,7 +300,7 @@ public class GameHelpers
 
     private static void SaveGameAndExit(TicTacTwoBrain gameInstance)
     {
-        Console.Write("Enter a name for your game: ");
+        Console.Write("Press ENTER: ");
         var saveName = Console.ReadLine()?.Trim();
 
         var gameState = gameInstance.GetGameState();

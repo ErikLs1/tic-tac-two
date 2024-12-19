@@ -89,13 +89,15 @@
             // PLACING A PIECE WHEN ACTION IS MAKE A MOVE
             if (!string.IsNullOrEmpty(Action) && Action == "Make-a-Move" && IsActionInProgress && string.IsNullOrEmpty(Direction))
             {
+                var currentPlayer = TicTacTwoBrain._nextMoveBy;
+                
                 bool moveResult = TicTacTwoBrain.MakeAMove(X, Y);
                     
                 if (moveResult)
                 {
                     _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(), TicTacTwoBrain.GetGameConfigName());
                     
-                    var winner = TicTacTwoBrain.CheckForWin(X, Y);
+                    var winner = TicTacTwoBrain.CheckForWin(X, Y, currentPlayer);
                     if (winner != null)
                     {
                         IsGameOver = true;
@@ -138,10 +140,11 @@
                     if (TicTacTwoBrain.IsWithinBoundsGrid(TicTacTwoBrain, X, Y) &&
                         TicTacTwoBrain.GetPiece(X, Y) == EGamePiece.Empty)
                     {
+                        var currentPlayer = TicTacTwoBrain._nextMoveBy;
                         TicTacTwoBrain.MoveAPiece(SelectedPieceX.Value, SelectedPieceY.Value, X, Y);
                         _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(),TicTacTwoBrain.GetGameConfigName());
                         
-                        var winner = TicTacTwoBrain.CheckForWin(X, Y);
+                        var winner = TicTacTwoBrain.CheckForWin(X, Y,currentPlayer);
                         if (winner != null)
                         {
                             IsGameOver = true;
@@ -165,14 +168,15 @@
             // HANDLE GRID MOVEMENT
             else if (!string.IsNullOrEmpty(Direction))
             {
-                
+                var currentPlayer = TicTacTwoBrain._nextMoveBy;
+
                 bool moveSuccess = TicTacTwoBrain.MoveGrid(TicTacTwoBrain, Direction.ToLower());
                
                 if (moveSuccess)
                 {
                      _gameRepository.SaveGame(TicTacTwoBrain.GetGameState(),TicTacTwoBrain.GetGameConfigName());
                     
-                    var winner = TicTacTwoBrain.CheckForWin(X, Y);
+                    var winner = TicTacTwoBrain.CheckForWin(X, Y, currentPlayer);
                     if (winner != null)
                     {
                         IsGameOver = true;

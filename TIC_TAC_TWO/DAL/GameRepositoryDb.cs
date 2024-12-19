@@ -12,9 +12,6 @@ public class GameRepositoryDb : IGameRepository
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
 
-        // Log the GameId before attempting to find the existing game
-        Console.WriteLine($"Attempting to save GameState with GameId: {gameState.GameId}");
-
         Game? existingGame = null;
 
         if (gameState.GameId.HasValue)
@@ -37,11 +34,9 @@ public class GameRepositoryDb : IGameRepository
             existingGame.GameBoardSerialized = JsonSerializer.Serialize(gameState.GameBoard);
 
             context.Games.Update(existingGame);
-            Console.WriteLine($"Updated existing game with ID {existingGame.Id}");
         }
         else
         {
-            Console.WriteLine("Creating a new game record.");
 
             var config = context.Configurations.FirstOrDefault(c => c.Name == gameConfigName);
             if (config == null)
@@ -77,7 +72,6 @@ public class GameRepositoryDb : IGameRepository
             context.SaveChanges();
 
             gameState.GameId = newGame.Id;
-            Console.WriteLine($"Created new game with ID {newGame.Id}");
         }
 
         context.SaveChanges();
