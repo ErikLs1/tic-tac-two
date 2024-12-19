@@ -46,7 +46,7 @@ public class Home : PageModel
     {
         if (action == "customConfig")
         {
-            return RedirectToPage("./Custom");
+            return RedirectToPage("./Custom", new {Username});
         }
 
         if (action == "createGame")

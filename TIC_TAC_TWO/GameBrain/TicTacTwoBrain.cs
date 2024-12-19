@@ -96,6 +96,7 @@ public class TicTacTwoBrain
         if (targetX >= 0 && targetX <= DimX - GridWidth && targetY >= 0 && targetY <= DimY - GridHeight)
         {
             _gridPosition = (targetX, targetY);
+            _nextMoveBy = _nextMoveBy == EGamePiece.X ? EGamePiece.O : EGamePiece.X;
             return true;
         }
         

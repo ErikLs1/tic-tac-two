@@ -1,9 +1,10 @@
 @page
 @model WebApp.Pages.Custom
 
-@{
+@{ 
     Layout = "Shared/_Layout";
-}<div class="custom-config-container d-flex justify-content-center align-items-center">
+}
+<div class="custom-config-container d-flex justify-content-center align-items-center">
     <div class="config-form-wrapper">
         <h1 class="text-center mb-4 mt-4">Game Configuration</h1>
 
@@ -58,7 +59,7 @@
         </form>
 
         <div class="text-center mt-4">
-            <a asp-page="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
+            <a asp-route-Username="@Model.Username" asp-page="./Home" class="btn btn-outline-secondary btn-sm">Back to List</a>
         </div>
     </div>
 </div>

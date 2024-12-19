@@ -78,6 +78,13 @@
         {
             var dbGame = _gameRepository.LoadGame(GameId);
             TicTacTwoBrain = new TicTacTwoBrain(dbGame);
+
+            if ((TicTacTwoBrain._nextMoveBy == EGamePiece.X && Username == "user2") ||
+                (TicTacTwoBrain._nextMoveBy == EGamePiece.O && Username == "user1"))
+            {
+                TempData["Error"] = "It's not your turn.";
+                return RedirectToPage("./PlayGame", new { GameId, Username });
+            }
             
             // PLACING A PIECE WHEN ACTION IS MAKE A MOVE
             if (!string.IsNullOrEmpty(Action) && Action == "Make-a-Move" && IsActionInProgress && string.IsNullOrEmpty(Direction))
@@ -230,3 +237,4 @@
             return Page();
         }
     }
+    

@@ -16,11 +16,15 @@ public class Custom : PageModel
     }
 
 
-    [BindProperty]
-    public GameConfig GameConfig { get; set; } = default!;
+    [BindProperty(SupportsGet = true)] public string Username { get; set; } = default!;
+    [BindProperty] public GameConfig GameConfig { get; set; } = default!;
     
     public IActionResult OnGet()
     {
+        if (string.IsNullOrEmpty(Username))
+        {
+            return RedirectToPage("./LoginPage", new { error = "No username provided." });
+        }
         return Page();
     }
     
@@ -40,6 +44,6 @@ public class Custom : PageModel
             return Page();
         }
         
-        return RedirectToPage("./Index");
+        return RedirectToPage("./Home", new {Username});
     }
 }
