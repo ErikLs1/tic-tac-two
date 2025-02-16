@@ -168,9 +168,10 @@ public class TicTacTwoBrain
             return false;
         }
 
-        _gameBoard[x][y] = _nextMoveBy;
+        var currentPlayer = _nextMoveBy;
+        _gameBoard[x][y] = currentPlayer;
         
-        if (CheckForWin(x, y) != null)
+        if (CheckForWin(x, y, currentPlayer) != null)
         {
             return true;
         }
@@ -190,7 +191,7 @@ public class TicTacTwoBrain
             
             _gameBoard[targetX][targetY] = _nextMoveBy;
             
-            if (CheckForWin(targetX, targetY) != null)
+            if (CheckForWin(targetX, targetY, _nextMoveBy) != null)
             {
                 Console.WriteLine($"{_nextMoveBy} wins!");
                 return;
@@ -206,20 +207,19 @@ public class TicTacTwoBrain
         }
     }
 
-    public EGamePiece? CheckForWin(int x, int y)
+    public EGamePiece? CheckForWin(int x, int y, EGamePiece player)
     {
-        // Ensure the starting cell is within the grid
         if (!IsWithinBoundsGrid(this, x, y))
         {
             return null;
         }
 
-        if (CheckDirection(x, y, 1, 0, _nextMoveBy) ||
-            CheckDirection(x, y, 0, 1, _nextMoveBy) ||
-            CheckDirection(x, y, 1, 1, _nextMoveBy) ||
-            CheckDirection(x, y, 1, -1, _nextMoveBy))
+        if (CheckDirection(x, y, 1, 0, player) ||
+            CheckDirection(x, y, 0, 1, player) ||
+            CheckDirection(x, y, 1, 1, player) ||
+            CheckDirection(x, y, 1, -1, player))
         {
-            return _nextMoveBy;
+            return player;
         }
 
         return null;
@@ -228,12 +228,9 @@ public class TicTacTwoBrain
 
     private bool CheckDirection(int x, int y, int deltaX, int deltaY, EGamePiece player)
         {
-            int count = 1; // Start with the current piece
+            int count = 1; 
 
-            // Count pieces in the positive direction
             count += CountInDirection(x, y, deltaX, deltaY, player);
-            
-            // Count pieces in the negative direction
             count += CountInDirection(x, y, -deltaX, -deltaY, player);
 
             return count >= _gameConfig.WinCondition;
@@ -249,10 +246,9 @@ public class TicTacTwoBrain
             int checkX = x + i * deltaX;
             int checkY = y + i * deltaY;
                 
-            // Ensure the cell is within the board and the grid
             if (checkX >= 0 && checkX < _gameConfig.BoardSizeWidth &&
                 checkY >= 0 && checkY < _gameConfig.BoardSizeHeight &&
-                IsWithinBoundsGrid(this, checkX, checkY) && // Ensure within grid
+                IsWithinBoundsGrid(this, checkX, checkY) &&
                 _gameBoard[checkX][checkY] == player)
             {
                 count++;
@@ -265,18 +261,4 @@ public class TicTacTwoBrain
 
         return count;
     }
-    
-    public void ResetGame()
-    {
-        var gameBoard = new EGamePiece[_gameState.GameConfig.BoardSizeWidth][];
-        for (var x = 0; x < gameBoard.Length; x++)
-        {
-            gameBoard[x] = new EGamePiece[_gameState.GameConfig.BoardSizeWidth];
-        }
-
-        _gameState.GameBoard = gameBoard;
-        _gameState.NextMoveBy = EGamePiece.X;
-    }
-    
-    
 }

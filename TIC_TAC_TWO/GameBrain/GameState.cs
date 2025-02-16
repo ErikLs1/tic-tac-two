@@ -10,6 +10,7 @@ public class GameState
     public int MoveCount { get; set; }
     public int GridPositionX { get; set; }
     public int GridPositionY { get; set; }
+    
     public GameState(EGamePiece[][] gameBoard, GameConfig gameConfig)
     {
         GameBoard = gameBoard;

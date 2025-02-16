@@ -45,14 +45,14 @@
 
         .winner-box h1 {
             font-size: 32px;
-            color: #28a745; /* Success green color */
+            color: #28a745; 
             margin-bottom: 20px;
         }
 
         .winner-message {
             font-size: 20px;
             font-weight: bold;
-            color: #343a40; /* Dark text color for readability */
+            color: #343a40; 
         }
 
         .btn {
@@ -204,8 +204,6 @@ else
                         <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Up-Right</button>
                     </form>
-
-                    <!-- Middle Row -->
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Left"/>
@@ -213,7 +211,6 @@ else
                         <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Left</button>
                     </form>
-                    <!-- Empty space in the middle -->
                     <div></div>
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
@@ -222,8 +219,6 @@ else
                         <input type="hidden" name="Username" value="@Model.Username"/>
                         <button type="submit" class="btn btn-secondary direction-btn">Right</button>
                     </form>
-
-                    <!-- Bottom Row -->
                     <form method="post" asp-page="./PlayGame" class="m-0">
                         <input type="hidden" name="Action" value="Move-the-Grid"/>
                         <input type="hidden" name="Direction" value="Down-Left"/>

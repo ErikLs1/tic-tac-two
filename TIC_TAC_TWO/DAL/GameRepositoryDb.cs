@@ -8,6 +8,7 @@ namespace DAL;
 
 public class GameRepositoryDb : IGameRepository
 {
+    
     public void SaveGame(GameState gameState, string gameConfigName)
     {
         using var context = new AppDbContextFactory().CreateDbContext(Array.Empty<string>());
